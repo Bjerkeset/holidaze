@@ -79,7 +79,10 @@ export default function VenueCardXl({ venue }: Props) {
             {featuresConfig.map(({ title, icon, metaKey }) => {
               if (venue.meta[metaKey as keyof typeof venue.meta]) {
                 return (
-                  <div className="rounded-3xl p-px bg-gradient-to-b from-accent to-transparent">
+                  <div
+                    key={metaKey}
+                    className="rounded-3xl p-px bg-gradient-to-b from-accent to-transparent"
+                  >
                     <div
                       className=" rounded-2xl shadow-xl p-2 w-20 h-20 border border- flex flex-col items-center gap-1"
                       key={title}
