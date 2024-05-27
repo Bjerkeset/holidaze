@@ -1,4 +1,3 @@
-import { VenueType } from "@/lib/validation/schemas";
 import React from "react";
 import VenueCard from "../cards/venue-card-sm";
 import {
@@ -9,6 +8,8 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils/utils";
+import { VenueType } from "@/lib/validation/types";
+import BookingList from "../widgets/booking-list";
 
 type Props = {
   venues: VenueType[];

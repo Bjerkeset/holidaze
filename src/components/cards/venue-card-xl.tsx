@@ -1,4 +1,3 @@
-import { VenueType } from "@/lib/validation/schemas";
 import Image from "next/image";
 import { Clock, Star } from "lucide-react";
 import { MdOutlineFreeBreakfast } from "react-icons/md";
@@ -6,9 +5,12 @@ import { CiWifiOn } from "react-icons/ci";
 import { FaDog } from "react-icons/fa";
 import { IoCarOutline } from "react-icons/io5";
 import { CardCarousel } from "./card-carusel";
+import { VenueType } from "@/lib/validation/types";
+import ProfileAvatar from "../widgets/profile-avatar";
 
 type Props = {
   venue: VenueType;
+  isOwner?: boolean;
 };
 
 const featuresConfig = [
@@ -68,13 +70,13 @@ export default function VenueCardXl({ venue }: Props) {
           </p>
         </div>
         <div className="space-y-2">
-          <h2 className="font-semibold">Details</h2>
-          <ul className="list-disc flex gap-5 px-4 text-sm">
+          {/* <ul className="list-disc flex gap-5 px-4 text-sm">
             <li className="list-none">guests {venue.maxGuests}</li>
             <li>bedrooms x</li>
             <li>beds x</li>
             <li>bath x</li>
-          </ul>
+          </ul> */}
+
           <div className="flex gap-3 justify-center">
             {featuresConfig.map(({ title, icon, metaKey }) => {
               if (venue.meta[metaKey as keyof typeof venue.meta]) {
@@ -96,7 +98,12 @@ export default function VenueCardXl({ venue }: Props) {
               return null;
             })}
           </div>
+          <div className=" space-y-2">
+            <p className="font-semibold">Venue Mananger</p>
+            {venue.owner && <ProfileAvatar profile={venue.owner} />}
+          </div>
           <div className="">
+            <h2 className="font-semibold">Details</h2>
             <p className="text-card-foreground/85 text-pretty">
               {venue.description}
             </p>

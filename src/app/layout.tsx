@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Bottombar from "@/components/widgets/bottombar";
 import Topbar from "@/components/widgets/topbar";
 import { cn } from "@/lib/utils/utils";
+import Footer from "@/components/widgets/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "w-screen h-screen bg-red-500")}>
+      <body className={cn(inter.className, "w-screen h-screen bg-background")}>
         {children}
         <Toaster />
       </body>

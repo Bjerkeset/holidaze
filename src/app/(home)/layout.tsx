@@ -1,4 +1,5 @@
 import Bottombar from "@/components/widgets/bottombar";
+import Footer from "@/components/widgets/footer";
 import Topbar from "@/components/widgets/topbar";
 import type { Metadata } from "next";
 
@@ -17,6 +18,7 @@ export default function VenueLayout({
       <Topbar />
       {children}
       <Bottombar />
+      <Footer />
     </main>
   );
 }

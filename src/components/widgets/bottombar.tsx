@@ -62,7 +62,7 @@ const NAVIGATION_LINKS = [
   //   },
   {
     Component: FilePlus2,
-    route: "/create",
+    route: "/venue/create",
     label: "Create",
   },
   {

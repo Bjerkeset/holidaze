@@ -28,17 +28,14 @@ import { cn, formatDate, formatPrice } from "@/lib/utils/utils";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { addDays, format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import {
-  BookingType,
-  CreateBookingSchema,
-  CreateBookingType,
-  VenueType,
-} from "@/lib/validation/schemas";
+import { CalendarIcon, Loader2 } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { DateRange } from "react-day-picker";
 import CountInput from "../ui/count-input";
 import { useRouter } from "next/navigation";
+import { createBooking } from "@/lib/server/api/api.action";
+import { toast } from "sonner";
+import { VenueType } from "@/lib/validation/types";
 
 type Props = {
   venue: VenueType;
@@ -58,6 +55,7 @@ const formSchema = z.object({
 });
 type FormType = z.infer<typeof formSchema>;
 export default function CheckoutForm({ venue }: Props) {
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(true);
   const [date, setDate] = useState<DateRange | undefined>({
@@ -71,17 +69,40 @@ export default function CheckoutForm({ venue }: Props) {
     },
   });
 
-  const {
-    formState: { errors },
-  } = form;
-  console.log("errors", errors);
+  // const {
+  //   formState: { errors },
+  // } = form;
+  // console.log("errors", errors);
 
-  function onSubmit(values: FormType) {
+  async function onSubmit(values: FormType) {
     console.log(values);
-    router.push(`/bookings/${venue.id}`);
+    setIsLoading(true);
+    // router.push(`/bookings/${venue.id}`);
+
+    try {
+      const res = await createBooking({
+        venueId: venue.id,
+        dateFrom: values.date.from.toISOString(),
+        dateTo: values.date.to.toISOString(),
+        guests: values.guests,
+      });
+
+      if (res.error) {
+        console.error("An error occurred:", res.error);
+        res.error.errors.forEach((err) => toast.error(err.message));
+        setIsLoading(false);
+        return;
+      }
+      console.log("res", res);
+      toast.success("Booking submitted successfully");
+    } catch (error: any) {
+      console.error(error.message || "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  console.log("form", form.watch("date"));
+  // console.log("form", form.watch("date"));
   isOpen;
   return (
     <div className="">
@@ -222,7 +243,13 @@ export default function CheckoutForm({ venue }: Props) {
                   </p>
                 </div>
 
-                <Button type="submit">Order</Button>
+                <Button type="submit" className="text-primary-foreground">
+                  {isLoading ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    "Order"
+                  )}
+                </Button>
               </form>
             </Form>
             <DrawerClose>

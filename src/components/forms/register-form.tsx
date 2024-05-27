@@ -31,7 +31,8 @@ import { Switch } from "@/components/ui/switch";
 import CustomFormField from "@/components/ui/custom-form-field";
 
 import { ReloadIcon } from "@radix-ui/react-icons";
-import { RegistrationSchema, RegistrationType } from "@/lib/validation/schemas";
+import { RegistrationSchema } from "@/lib/validation/schemas";
+import { RegistrationType } from "@/lib/validation/types";
 
 export default function RegisterForm() {
   const router = useRouter();

@@ -3,22 +3,23 @@ import { z } from "zod";
 
 // Zod is validate forms and types for runtime validation.
 
-// Infer the Types directly from Zod schema
-export type VenueType = z.infer<typeof VenueSchema>;
-export type MediaType = z.infer<typeof MediaSchema>;
-// Booking types
-export type BookingType = z.infer<typeof BookingSchema>;
-export type CreateBookingType = z.infer<typeof CreateBookingSchema>;
-// Auth types
-export type ProfileType = z.infer<typeof BaseProfileSchema>;
-export type RegistrationType = z.infer<typeof RegistrationSchema>;
-export type LoginType = z.infer<typeof LoginSchema>;
-// Meta data type
-export type MetaType = z.infer<typeof MetaSchema>;
+// // Infer the Types directly from Zod schema
+// export type VenueType = z.infer<typeof VenueSchema>;
+// export type MediaType = z.infer<typeof MediaSchema>;
+// // Booking types
+// export type BookingType = z.infer<typeof BookingSchema>;
+// export type CreateBookingType = z.infer<typeof CreateBookingSchema>;
+// // export type BookingFormType = z.infer<typeof BookingFormSchema>;
+// // Auth types
+// export type ProfileType = z.infer<typeof BaseProfileSchema>;
+// export type RegistrationType = z.infer<typeof RegistrationSchema>;
+// export type LoginType = z.infer<typeof LoginSchema>;
+// // Meta data type
+// export type MetaType = z.infer<typeof MetaSchema>;
 
 // Media schema
 export const MediaSchema = z.object({
-  url: z.string().url({ message: "Invalid URL for media." }),
+  url: z.string().url({ message: "Invalid URL for media." }).max(500),
   alt: z.string(),
 });
 
@@ -59,6 +60,18 @@ export const OwnerSchema = z.object({
   banner: MediaSchema,
 });
 
+// CreateVenue schema
+export const CreateVenueSchema = z.object({
+  name: z.string(),
+  description: z.string(),
+  media: z.array(MediaSchema).optional(),
+  price: z.coerce.number().min(1),
+  maxGuests: z.coerce.number().min(1),
+  rating: z.number().optional().default(0),
+  meta: VenueMetaSchema.optional(),
+  location: LocationSchema.optional(),
+});
+
 // Customer schema references OwnerSchema
 const CustomerSchema = OwnerSchema.omit({ banner: true }).nullable();
 
@@ -66,7 +79,7 @@ const CustomerSchema = OwnerSchema.omit({ banner: true }).nullable();
 const BaseBookingSchema = z.object({
   id: z.string().optional(),
   dateFrom: z.string().optional(),
-  dateTo: z.date().optional(),
+  dateTo: z.string().optional(),
   guests: z.number().optional(),
   created: z.string().optional(),
   updated: z.string().optional(),
@@ -161,6 +174,16 @@ export const BaseProfileSchema = z.object({
   venueManager: z.boolean(),
 });
 
+export const UpdateProfileSchema = z.object({
+  bio: z
+    .string()
+    .min(6, { message: "Bio must be at least 6 characters long." })
+    .max(250, { message: "Bio must not exceed 250 characters." })
+    .optional(),
+  avatar: MediaSchema.optional(),
+  banner: MediaSchema.optional(),
+  venueManager: z.boolean().optional(),
+});
 // Define the registration schema with specific required fields and confirmPassword
 export const RegistrationSchema = BaseProfileSchema.pick({
   name: true,

@@ -1,36 +1,26 @@
 import CustomFeed from "@/components/feeds/custom-feed";
-import FeaturedFeed from "@/components/feeds/featured-feed";
-import LatestFeed from "@/components/feeds/latest-feed";
-import { fetchAllVenues } from "@/lib/server/api/api.action";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
+import { fetchAllVenuesInEurope } from "@/lib/server/api/api.action";
+import VenueMap from "@/components/map/venue-map";
+import CommandSearch from "@/components/widgets/search";
+import { transformVenuesToCommands } from "@/lib/utils/utils";
 
 export default async function Home() {
-  const venuesResponse = await fetchAllVenues();
+  const { data: venues, error: venuesError } = await fetchAllVenuesInEurope();
 
-  if (!venuesResponse.data) {
-    console.error("No data available");
-    return <div>No data available</div>;
+  if (venuesError || !venues) {
+    return <div>No venues found</div>;
   }
-
+  const commands = transformVenuesToCommands(venues || []);
   return (
-    <div className="flex justify-center flex-col items-center gap-10 h-full">
-      {/* <FeaturedFeed venues={venuesResponse.data} /> */}
-      {/* <LatestFeed venues={venuesResponse.data} /> */}
-      <ResizablePanelGroup
-        direction="vertical"
-        className="h-full max-w-md rounded-lg border"
-      >
-        <ResizablePanel defaultSize={25}>header</ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={75}>
-          <CustomFeed venues={venuesResponse.data} title={"Recomened"} />
-          <CustomFeed venues={venuesResponse.data} isSmall title={"Latest"} />
-        </ResizablePanel>
-      </ResizablePanelGroup>
+    <div className="flex  flex-col items-center gap-10 h-screen bg-slate-100">
+      <div className="w-full bg-green-100 max-w-screen-xl overflow-hidden">
+        <VenueMap venues={venues} />
+      </div>
+      <CommandSearch commands={commands} />
+
+      {/* <div className="w-full max-w-screen-xl flex flex-col gap-10"> */}
+      <CustomFeed venues={venues} title={"Suggestions"} />
+      {/* </div> */}
     </div>
   );
 }
