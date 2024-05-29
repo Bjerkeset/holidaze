@@ -1,30 +1,28 @@
-import { VenueType } from "@/lib/validation/schemas";
-import React from "react";
-import VenueCard from "../cards/venue-card-sm";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { SortButtonGroup } from "../buttons/sort-button-group";
+import VenuesGrid from "./venues-grid";
+import { SearchParamsType, VenueType } from "@/lib/validation/types";
 
 type Props = {
   venues: VenueType[];
+  searchParams: SearchParamsType;
+  count?: number;
 };
 
-export default function FeaturedFeed({ venues }: Props) {
+export default function LatestFeed({ venues, searchParams, count }: Props) {
   return (
-    <Carousel className="w-full max-w-[400px] bg-red-100">
-      <CarouselContent>
-        {venues.map((venue: VenueType) => (
-          <CarouselItem key={venue.id} className="basis-1/2">
-            <VenueCard key={venue.id} venue={venue} />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div>
+      <div className="px-6 py-4">
+        <div className="flex gap-1 items-center justify-between">
+          <h2 className="text-2xl font-bold ">Venues</h2>
+          <p>
+            <span> {venues.length} </span>
+            <span className="text-muted-foreground text-sm">/{count} </span>
+          </p>
+        </div>
+
+        <SortButtonGroup searchParams={searchParams} />
+      </div>
+      <VenuesGrid venues={venues} />
+    </div>
   );
 }

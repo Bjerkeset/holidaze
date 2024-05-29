@@ -65,7 +65,7 @@ export const CreateVenueSchema = z.object({
   name: z.string(),
   description: z.string(),
   media: z.array(MediaSchema).optional(),
-  price: z.coerce.number().min(1),
+  price: z.coerce.number(),
   maxGuests: z.coerce.number().min(1),
   rating: z.number().optional().default(0),
   meta: VenueMetaSchema.optional(),

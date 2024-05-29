@@ -1,4 +1,5 @@
 import Chat from "@/components/widgets/chat";
+import { FancyMultiSelect } from "@/components/widgets/search-test";
 import React from "react";
 
 type Props = {};
@@ -6,7 +7,8 @@ type Props = {};
 export default function page({}: Props) {
   return (
     <div>
-      <Chat />
+      <FancyMultiSelect />
+      {/* <Chat /> */}
     </div>
   );
 }

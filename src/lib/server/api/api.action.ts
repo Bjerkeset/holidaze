@@ -469,8 +469,14 @@ export async function fetchAllVenuesInEurope(): Promise<
 
   try {
     while (!isLastPage) {
+      const queryParameters = new URLSearchParams({
+        _owner: "true",
+        limit: limit.toString(),
+        page: currentPage.toString(),
+      });
+
       const response = await fetch(
-        `${BASE}/holidaze/venues?limit=${limit}&page=${currentPage}`,
+        `${BASE}/holidaze/venues?${queryParameters.toString()}`,
         {
           method: "GET",
           headers: {
@@ -801,17 +807,23 @@ export async function fetchVenueById(
   }
 }
 
-// Function to fetch all venues
-export async function fetchAllVenues(): Promise<
-  APIResponse<VenueType[], MetaType>
-> {
+// Function to fetch all venues with pagination and sorting
+export async function fetchAllVenues({
+  limit = 24,
+  page = 1,
+  sort = "rating",
+  sortOrder = "desc",
+} = {}): Promise<APIResponse<VenueType[], MetaType>> {
   try {
-    const response = await fetch(`${BASE}/holidaze/venues`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${BASE}/holidaze/venues?limit=${limit}&page=${page}&sort=${sort}&sortOrder=${sortOrder}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       const errorResponse: ErrorObj = await response.json();

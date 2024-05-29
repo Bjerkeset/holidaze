@@ -7,14 +7,21 @@ import Link from "next/link";
 import BookingList from "../widgets/booking-list";
 import { cookies } from "next/headers";
 import { Button } from "../ui/button";
+import ProfileAvatar from "../widgets/profile-avatar";
 
 type Props = {
   venue: VenueType;
   className?: string;
   currentUser?: string;
+  md?: boolean;
 };
 
-export default function VenueCard({ venue, className, currentUser }: Props) {
+export default function VenueCard({
+  venue,
+  className,
+  currentUser,
+  md,
+}: Props) {
   let isOwner = false;
 
   if (currentUser === venue.owner?.name) {
@@ -29,21 +36,31 @@ export default function VenueCard({ venue, className, currentUser }: Props) {
   }
 
   return (
-    <div className="rounded-2xl shadow col-span-2">
+    <div className="rounded-2xl shadow w-full">
       <Link
         href={`/venue/${venue.id}`}
         className={cn("overflow-hidden", className)}
       >
-        <div className={cn("relative overflow-hidden rounded-xl h-56")}>
+        <div
+          className={cn(
+            "relative overflow-hidden rounded-xl h-56 ",
+            md && "h-96"
+          )}
+        >
           <Image
             src={mediaUrl}
             alt={venue.name || "Venue image"}
-            height={100}
-            width={100}
+            fill
             className="w-full h-full object-cover group-hover:scale-125 group-hover:rotate-3 duration-500"
           />
+          <div className="relative p-2 w-fit">
+            <div className="flex  rounded-md bg-secondary/50 relative z-20 px-2">
+              <ProfileAvatar className="z-50" noClick profile={venue.owner!} />
+              <div className="absolute -inset-1 rounded-md blur-md bg-gradient-to-br from-gray-300 via-white/50 to-gray-300 z-10"></div>
+            </div>
+          </div>
         </div>
-        <div className="flex justify-between px-4">
+        <div className="flex justify-between px-4 py-2">
           <div>
             <h2 className="text-nowrap overflow-hidden">{venue.name}</h2>
             <p className="text-xs text-muted-foreground">
@@ -60,20 +77,23 @@ export default function VenueCard({ venue, className, currentUser }: Props) {
       {isOwner ? (
         <div>
           {venue.bookings && venue.bookings.length > 0 ? (
-            <BookingList bookings={venue.bookings} />
+            <BookingList
+              collapsible
+              username={currentUser || ""}
+              bookings={venue.bookings}
+            />
           ) : (
             <div className="text-muted-foreground text-sm flex h-12 items-center justify-center mt-1">
               <p className="">NO BOOKINGS</p>
             </div>
           )}
         </div>
-      ) : (
-        <div className="w-full p-2 flex">
-          <Button className={"mx-auto w-full rounded-xl"} size={"sm"}>
-            View
-          </Button>
-        </div>
-      )}
+      ) : // <div className="w-full p-2 flex">
+      //   <Button className={"mx-auto w-full rounded-xl"} size={"sm"}>
+      //     View
+      //   </Button>
+      // </div>
+      null}
     </div>
   );
 }

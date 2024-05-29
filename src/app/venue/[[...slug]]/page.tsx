@@ -8,7 +8,6 @@ import {
   fetchVenueById,
 } from "@/lib/server/api/api.action";
 import { cn } from "@/lib/utils/utils";
-import { CreateBookingSchema } from "@/lib/validation/schemas";
 import { Settings } from "lucide-react";
 import { cookies } from "next/headers";
 import Link from "next/link";
@@ -36,8 +35,8 @@ export default async function VenuePage({
     }
   }
 
-  const cookieStore = cookies();
-  const accessToken = cookieStore.get("accessToken");
+  // const cookieStore = cookies();
+  // const accessToken = cookieStore.get("accessToken");
 
   if (error) {
     return <ErrorToast error={error} />;
@@ -49,18 +48,18 @@ export default async function VenuePage({
 
   if (isOwner && params.slug[1] === "update") {
     return (
-      <div className="flex items-center h-full px-3">
+      <div className="flex items-center h-full w-full px-3">
         <CreateVenueForm venue={venue} isEditing />
       </div>
     );
   }
-
+  console.log("venue----", venue);
   return (
-    <div className="flex flex-col h-full justify-between">
+    <div className="flex flex-col w-full justify-between md:w-auto md:border md:shadow md:my-10 md:rounded-xl overflow-hidden max-w-screen-lg">
       <VenueCardXl isOwner={isOwner} venue={venue} />
-      {!isOwner && <CheckoutForm venue={venue} />}
+      {/* {!isOwner && <CheckoutForm venue={venue} />} */}
       {isOwner && (
-        <div className="flex fixed bottom-0 w-full items-center border-t p-2 justify-between bg-background">
+        <div className="flex fixed bottom-0 w-full items-center border-t p-2 justify-between bg-background md:hidden ">
           <Link
             className={cn(buttonVariants({ variant: "default" }), "flex gap-3")}
             href={`/venue/${venue.id}/update`}

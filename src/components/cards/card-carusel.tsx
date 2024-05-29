@@ -10,18 +10,18 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { MediaType } from "@/lib/validation/schemas";
 import Image from "next/image";
-import { Divide, Key } from "lucide-react";
+import { MediaType } from "@/lib/validation/types";
+import { useState } from "react";
 
 type Props = {
   media: MediaType[];
 };
 
 export function CardCarousel({ media }: Props) {
-  const [api, setApi] = React.useState<CarouselApi>();
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
 
   React.useEffect(() => {
     if (!api) {
@@ -36,48 +36,57 @@ export function CardCarousel({ media }: Props) {
     });
   }, [api]);
 
-  //   if (media.length <= 1) {
-  //     return (
-  //       <div className="w-full bg-green-400">
-  //         <div className="flex aspect-square items-center justify-center w-full max-h-[50v] bg-green-400">
-  //           <Image
-  //             src={media[0].url}
-  //             fill
-  //             alt={media[0].alt || "Image"}
-  //             className="w-full h-full object-cover"
-  //           />
-  //         </div>
-  //       </div>
-  //     );
-  //   }
+  // //   if (media.length <= 1) {
+  // //     return (
+  // //       <div className="w-full bg-green-400">
+  // //         <div className="flex aspect-square items-center justify-center w-full max-h-[50v] bg-green-400">
+  // //           <Image
+  // //             src={media[0].url}
+  // //             fill
+  // //             alt={media[0].alt || "Image"}
+  // //             className="w-full h-full object-cover"
+  // //           />
+  // //         </div>
+  // //       </div>
+  // //     );
+  // //   }
+
+  console.log("media", media);
 
   return (
-    <div className="w-full bg-slate-100  ">
+    <div className="w-full h-full md:pt-4 ">
       <Carousel
         setApi={setApi}
-        opts={{
-          align: "end",
-        }}
-        className="w-full mx-auto  max-w-[670px] rounded-xl border border-red-500 overflow-hidden"
+        className="max-w-full md:max-w-[650px] mx-auto "
       >
-        <CarouselContent>
+        <CarouselContent className=" ">
           {media.map((media, index) => (
-            <CarouselItem key={`${media.url}`} className={""}>
-              <Card key={index}>
-                <CardContent className=" aspect-square overflow-hidden justify-center p-0 m-0 rounded-lg bg-green-400 ">
-                  <Image
-                    src={media.url}
-                    fill
-                    alt={media.alt || "Image"}
-                    className=" object-cover max-w-screen-sm rounded-lg min-w-full min-h-full"
-                  />
-                </CardContent>
-              </Card>
+            <CarouselItem key={index}>
+              <div className="p-1 ">
+                <Card className="  p-0 m-0 overflow-hidden border-none">
+                  <CardContent className="flex aspect-square items-center justify-center m-0 p-0 w-full h-auto">
+                    {/* <Image
+                      src={media.url}
+                      fill
+                      alt={media.alt || "Image"}
+                      className="w-full h-full object-cover"
+                    /> */}
+                    <img
+                      src={media.url}
+                      alt={media.alt}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute z-50 w-4/5 bg-green-400 bottom-5">
+                      dsadas{media.alt}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
-        {/* <CarouselPrevious />
-        <CarouselNext /> */}
+        <CarouselPrevious className="hidden md:flex" />
+        <CarouselNext className="hidden md:flex" />
       </Carousel>
       <div className="text-center text-sm text-muted-foreground">
         Slide {current} of {count}

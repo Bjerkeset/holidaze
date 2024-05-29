@@ -16,7 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import CustomFormField from "../ui/custom-form-field";
 import { updateUser } from "@/lib/server/api/api.action";
 import {
@@ -69,6 +68,7 @@ export default function EditUserForm({ user, isEdit }: Props) {
   }, [isEdit]);
 
   async function onSubmit(values: FormValues) {
+    console.log("values---", values);
     try {
       const response = await updateUser(user.name, values);
       console.log("response", response);
@@ -86,7 +86,7 @@ export default function EditUserForm({ user, isEdit }: Props) {
       >
         <GoGear className="w-5 h-5" />
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="">
         <DialogHeader>
           <DialogTitle>Edit Profile</DialogTitle>
           <DialogDescription></DialogDescription>
@@ -102,24 +102,13 @@ export default function EditUserForm({ user, isEdit }: Props) {
             <CustomFormField
               form={form}
               formName={"avatar.url"}
-              formTitle={"Avatar Url"}
-            />
-            <CustomFormField
-              form={form}
-              formName={"avatar.alt"}
-              formTitle={"Avatar Alt Text"}
+              formTitle={"Avatar Image Url"}
             />
             <CustomFormField
               form={form}
               formName={"banner.url"}
-              formTitle={"Banner Url"}
+              formTitle={"Banner Image Url"}
             />
-            <CustomFormField
-              form={form}
-              formName={"banner.alt"}
-              formTitle={"Banner Alt Text"}
-            />
-
             <FormField
               control={form.control}
               name="venueManager"
@@ -140,7 +129,9 @@ export default function EditUserForm({ user, isEdit }: Props) {
                 </FormItem>
               )}
             />
-            <Button type="submit">Update</Button>
+            <Button type="submit" className="">
+              Update
+            </Button>
           </form>
         </Form>
       </DialogContent>

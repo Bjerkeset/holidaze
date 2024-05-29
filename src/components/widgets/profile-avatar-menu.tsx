@@ -22,7 +22,7 @@ type Props = {
 export default function ProfileAvatarMenu({ profile }: Props) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex gap-2 items-center hover:bg-accent hover:shadow rounded-lg px-2">
+      <DropdownMenuTrigger className="flex gap-2 items-center hover:bg-secondary/60 transition duration-300 hover:shadow rounded-lg px-2">
         <ProfileAvatar profile={profile} noClick />
         <AlignRight />
       </DropdownMenuTrigger>

@@ -108,7 +108,7 @@ export function formatTimeFrame(
     return `${Math.round(days)} day${Math.round(days) > 1 ? "s" : ""}`;
   }
 
-  return "Less than a day";
+  return "< day";
 }
 
 // Example usage:
@@ -146,9 +146,34 @@ export const getLatestPurchasePrice = (
   return sortedChartData[sortedChartData.length - 1].value;
 };
 
+// Creates a new array of venue names and excludes duplicates.
 export const transformVenuesToCommands = (venues: VenueType[]) => {
-  return venues.map((venue) => ({
-    value: venue.name,
-    label: venue.name,
-  }));
+  const uniqueVenueNames = new Set();
+  return venues
+    .filter((venue) => {
+      if (uniqueVenueNames.has(venue.name)) {
+        return false;
+      }
+      uniqueVenueNames.add(venue.name);
+      return true;
+    })
+    .map((venue) => ({
+      value: venue.name,
+      label: venue.name,
+    }));
+};
+
+export const capitalizeFirstLetter = (string: string) => {
+  if (!string) return "";
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const sortVenuesByRating = (venues: VenueType[]) => {
+  return [...venues].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
+};
+
+export const sortVenuesByCreationDate = (venues: VenueType[]) => {
+  return [...venues].sort(
+    (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+  );
 };

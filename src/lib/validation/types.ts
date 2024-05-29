@@ -89,6 +89,12 @@ export type BookingType = {
   customer: CustomerType | null;
 };
 
+export type ExpandedBookingType = BookingType & {
+  venueTitle: string;
+  venuePrice: number;
+  venueId: string;
+};
+
 export type CreateBookingType = {
   dateFrom: string;
   dateTo: string;
@@ -144,8 +150,6 @@ export type ApiKeyType = {
   key: string;
 };
 
-// File: types.ts
-
 export type UpdateUserRequestType = {
   bio?: string;
   avatar?: MediaType;
@@ -168,4 +172,10 @@ export type StatisticsCardProps = {
   icon: ReactNode;
   description?: string;
   percentageChange?: number;
+};
+
+export type SearchParamsType = {
+  search: string | "";
+  sort: string | "";
+  page: number | 1;
 };

@@ -57,7 +57,7 @@ type FormType = z.infer<typeof formSchema>;
 export default function CheckoutForm({ venue }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState<DateRange | undefined>({
     from: new Date(),
     to: addDays(new Date(), 7),
@@ -103,7 +103,7 @@ export default function CheckoutForm({ venue }: Props) {
   }
 
   // console.log("form", form.watch("date"));
-  isOpen;
+
   return (
     <div className="">
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -135,20 +135,20 @@ export default function CheckoutForm({ venue }: Props) {
             </motion.div>
           )}
         </AnimatePresence>
-        <Button variant="secondary" onClick={() => setIsOpen(true)}>
+        <Button
+          className="hidden md:flex"
+          variant="secondary"
+          onClick={() => setIsOpen(true)}
+        >
           Another Button
         </Button>
-        <div className="flex fixed bottom-0 w-full items-center border-t p-2 justify-between bg-background">
+        <div className="md:hidden flex fixed bottom-0 w-full items-center border-t p-2 justify-between bg-background max-w-screen-2xl ">
           <p>{formatPrice(venue.price)} / night</p>
           <DrawerTrigger asChild>
             <Button size={"lg"}>Book Now</Button>
           </DrawerTrigger>
         </div>
         <DrawerContent className="h-[90vh]">
-          {/* <DrawerHeader>
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader> */}
           <DrawerFooter className="h-full">
             <Form {...form}>
               <form

@@ -14,11 +14,13 @@ export default function VenueLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="w-screen h-screen bg-background">
+    <>
       <Topbar />
-      {children}
+      <main className="flex flex-col items-center w-screen h-screen bg-background">
+        {children}
+      </main>
+      {/* <Footer /> */}
       <Bottombar />
-      <Footer />
-    </main>
+    </>
   );
 }

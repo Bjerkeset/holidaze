@@ -12,7 +12,7 @@ export default function VenueLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="w-screen h-screen bg-background">
+    <main className="flex flex-col items-center w-screen h-screen bg-background max-w-screen-2xl mx-auto">
       <TopbarVenue />
       {children}
     </main>

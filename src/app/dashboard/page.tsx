@@ -1,7 +1,7 @@
 import VenueCard from "@/components/cards/venue-card-sm";
 import ChartWapper from "@/components/feeds/chart-wapper";
 import VenuesGrid from "@/components/feeds/venues-grid";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingList from "@/components/widgets/booking-list";
@@ -17,9 +17,11 @@ import {
   calculatePercentageChange,
   getLatestPurchasePrice,
   formatTimeFrame,
+  cn,
 } from "@/lib/utils/utils";
 import {
   BookingType,
+  CustomerType,
   StatisticsCardProps,
   VenueType,
 } from "@/lib/validation/types";
@@ -29,6 +31,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import StatisticsCard from "@/components/cards/statistics-card";
 import ProfileAvatar from "@/components/widgets/profile-avatar";
+import { Badge } from "@/components/ui/badge";
+import Table from "@/components/table/table";
 
 export default async function DashboardPage() {
   const username = cookies().get("username");
@@ -120,7 +124,14 @@ export default async function DashboardPage() {
 
   const latestPurchasePrice = getLatestPurchasePrice(sortedChartData);
 
-  const allBookings = (venues || []).flatMap((venue) => venue.bookings || []);
+  const allBookings = (venues || []).flatMap((venue) =>
+    (venue.bookings || []).map((booking) => ({
+      ...booking,
+      venueTitle: venue.name,
+      venueId: venue.id,
+      venuePrice: venue.price,
+    }))
+  );
 
   console.log("Latest Purchase Price:", latestPurchasePrice);
   console.log("current week revenue---", currentWeekRevenue);
@@ -161,24 +172,32 @@ export default async function DashboardPage() {
 
   return (
     <section className="mx-auto w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-2xl px-4 pb-4 border rounded-2xl">
-      <div className="py-4 flex justify-between">
+      <div className="py-4 flex justify-between flex-wrap gap-2">
         <h1 className="text-2xl">Dashboard</h1>
         {venueManager ? (
-          <Button size={"default"} asChild>
-            <Link href={"/venue/create"} className="flex gap-4">
-              <CirclePlus className="w-4 h-4" />
-              <span>Create </span>
+          <div className="flex gap-2 items-center">
+            <Link
+              className={cn(buttonVariants({ variant: "outline" }))}
+              href={"/profile"}
+            >
+              Profile
             </Link>
-          </Button>
+            <Button asChild>
+              <Link href={"/venue/create"} className="flex gap-4">
+                <CirclePlus className="w-4 h-4" />
+                <span>Create </span>
+              </Link>
+            </Button>
+          </div>
         ) : (
-          <Button>Upgrade</Button>
+          <Button>Upgrade to Manager</Button>
         )}
       </div>
-      <Tabs defaultValue="account" className="w-full">
+      <Tabs defaultValue="overview" className="w-full">
         <TabsList className=" justify-between px-6">
           <div className="flex ">
-            <TabsTrigger className="text-xs sm:text-sm" value="account">
-              Account
+            <TabsTrigger className="text-xs sm:text-sm" value="overview">
+              Overview
             </TabsTrigger>
             <TabsTrigger className="text-xs sm:text-sm" value="venues">
               Venues
@@ -186,9 +205,12 @@ export default async function DashboardPage() {
             <TabsTrigger className="text-xs sm:text-sm" value="bookings">
               Bookings
             </TabsTrigger>
+            <TabsTrigger className="text-xs sm:text-sm" value="list">
+              List
+            </TabsTrigger>
           </div>
         </TabsList>
-        <TabsContent value="account" className="flex flex-col gap-2">
+        <TabsContent value="overview" className="flex flex-col gap-2">
           <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-4">
             {STATS_DATA.map((stat: StatisticsCardProps, index) => (
               <StatisticsCard key={index} {...stat} />
@@ -199,28 +221,59 @@ export default async function DashboardPage() {
         <TabsContent value="venues" className="">
           <VenuesGrid venues={venues || []} />
         </TabsContent>
+        <TabsContent value={"list"}>
+          <Table data={venues} />
+        </TabsContent>
         <TabsContent value="bookings" className="">
-          {allBookings.map((booking) => (
-            <div
+          <BookingList bookings={allBookings} username={username.value} />
+          {/* {allBookings.map((booking) => (
+            <Link
               key={booking.id}
-              className="p-2 text-sm space-y-2 my-2 rounded-none"
+              className={cn(
+                "flex shadow p-2 text-sm my-2 rounded-none hover:bg-secondary transition-colors duration-200"
+              )}
+              href={`/venue/${booking.venueId}`}
             >
-              <div className="flex items-center">
+              <div className="flex flex-col items-center  w-1/6 ">
                 {booking.customer && (
-                  <ProfileAvatar profile={booking.customer} />
+                  <ProfileAvatar
+                    isOwner={username.name === booking.customer.name}
+                    willFit
+                    profile={booking.customer}
+                    className={cn("")}
+                  />
                 )}
-                <p className="text-nowrap">
-                  {booking.guests} Guest{booking.guests > 1 && "s"}
+                <p className="text-xs text-nowrap hidden md:block">
+                  Created{" "}
+                  {formatTimeFrame(booking.created, new Date()) + " ago"}
                 </p>
               </div>
-              <div className="text-xs flex items-center justify-between">
-                <p>{formatDate(booking.dateFrom)}</p>
-                <p className=" ">
-                  {formatTimeFrame(booking.dateFrom, booking.dateTo)} booked
+              <div className="text-xs flex flex-col items-center w-full justify-between ">
+                <p className="text-sm md:text-base font-semibold">
+                  {booking.venueTitle}
+                </p>
+                <p className="flex gap-1">
+                  <span className="hidden sm:block">From - </span>{" "}
+                  {formatDate(booking.dateFrom)}
                 </p>
               </div>
-            </div>
-          ))}
+              <div className="text-xs flex flex-col items-center w-full lg:w-1/4  justify-between ">
+                <div className="flex justify-start w-full items-center gap-1 h-full">
+                  <Badge className="text-nowrap bg-green-500/80 rounded-full">
+                    + ${booking.venuePrice * booking.guests}
+                  </Badge>
+                  <div className="flex flex-col items-end justify-around w-full h-full ">
+                    <p className="text-nowrap text-xs md:text-sm pr-0 md:pr-4">
+                      {booking.guests} Guest{booking.guests > 1 && "s"}
+                    </p>
+                    <p className="pr-0 md:pr-1 hidden md:block">
+                      {formatTimeFrame(booking.dateFrom, booking.dateTo)} booked
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))} */}
         </TabsContent>
       </Tabs>
     </section>
