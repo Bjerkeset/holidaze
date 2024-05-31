@@ -1,4 +1,5 @@
 // file: schemas.ts
+import { addDays } from "date-fns";
 import { z } from "zod";
 
 // Zod is validate forms and types for runtime validation.
@@ -16,6 +17,20 @@ import { z } from "zod";
 // export type LoginType = z.infer<typeof LoginSchema>;
 // // Meta data type
 // export type MetaType = z.infer<typeof MetaSchema>;
+
+export const checkoutFormSchema = z.object({
+  date: z
+    .object({
+      from: z.date(),
+      to: z.date(),
+    })
+    .refine(
+      (data) => data.from > addDays(new Date(), -1),
+      "Start date must be in the future"
+    ),
+  guests: z.coerce.number().min(1),
+});
+export type CheckoutFormType = z.infer<typeof checkoutFormSchema>;
 
 // Media schema
 export const MediaSchema = z.object({

@@ -1,4 +1,3 @@
-import Chat from "@/components/widgets/chat";
 import { FancyMultiSelect } from "@/components/widgets/search-test";
 import React from "react";
 

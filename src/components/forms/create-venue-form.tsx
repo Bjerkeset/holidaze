@@ -47,6 +47,7 @@ export default function CreateVenueForm({
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width: 850px)"); // Use the useMediaQuery hook
+  const router = useRouter();
 
   const defaultValues =
     isEditing && venue
@@ -117,7 +118,6 @@ export default function CreateVenueForm({
       toast.success(`Venue ${isEditing ? "updated" : "created"} successfully!`);
       console.log(`Venue ${isEditing ? "updated" : "created"}:`, res.data);
 
-      const router = useRouter();
       router.replace(`/venue/${res.data?.id}`);
     } catch (error: any) {
       setHasError(true);

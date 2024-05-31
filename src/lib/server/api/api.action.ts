@@ -816,7 +816,7 @@ export async function fetchAllVenues({
 } = {}): Promise<APIResponse<VenueType[], MetaType>> {
   try {
     const response = await fetch(
-      `${BASE}/holidaze/venues?limit=${limit}&page=${page}&sort=${sort}&sortOrder=${sortOrder}`,
+      `${BASE}/holidaze/venues?limit=${limit}&page=${page}&sort=${sort}&_owner=true&sortOrder=${sortOrder}`,
       {
         method: "GET",
         headers: {
@@ -1127,6 +1127,92 @@ export async function fetchProfileByName(
     }
   } catch (error: any) {
     console.error("Failed to fetch profile:", error.message);
+    return {
+      meta: {},
+      error: {
+        errors: [
+          {
+            message: error.message || "An error occurred",
+            code: "internal_error",
+            path: [],
+          },
+        ],
+        status: "Internal Server Error",
+        statusCode: 500,
+      },
+    };
+  }
+}
+
+export async function deleteVenue(venueId: string): Promise<APIResponse<null>> {
+  try {
+    const accessToken = cookies().get("accessToken")?.value.toString();
+    if (!accessToken) {
+      console.error("Access token not found!");
+      return {
+        meta: {},
+        error: {
+          errors: [
+            {
+              message: "Access token not found",
+              code: "access_token_missing",
+              path: [],
+            },
+          ],
+          status: "Error",
+          statusCode: 401,
+        },
+      };
+    }
+
+    const apiKeyResponse = await createApiKey(accessToken, "Delete Venue");
+    if (apiKeyResponse.error || !apiKeyResponse.data) {
+      console.error(
+        "Failed to retrieve API Key:",
+        apiKeyResponse.error || "No API key received"
+      );
+      return {
+        meta: {},
+        error: apiKeyResponse.error || {
+          errors: [
+            {
+              message: "Failed to retrieve API Key",
+              code: "api_key_failure",
+              path: [],
+            },
+          ],
+          status: "Error",
+          statusCode: 500,
+        },
+      };
+    }
+
+    const apiKey = apiKeyResponse.data.key;
+
+    const response = await fetch(`${BASE}/holidaze/venues/${venueId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+        "X-Noroff-API-Key": apiKey,
+      },
+    });
+
+    if (!response.ok) {
+      const errorResponse: ErrorObj = await response.json();
+      console.error("HTTP error! Status:", response.status, errorResponse);
+      return {
+        meta: {},
+        error: errorResponse,
+      };
+    }
+
+    return {
+      data: null,
+      meta: {},
+    };
+  } catch (error: any) {
+    console.error("Failed to delete venue:", error.message);
     return {
       meta: {},
       error: {

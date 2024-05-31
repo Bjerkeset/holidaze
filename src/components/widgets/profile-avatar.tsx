@@ -24,6 +24,20 @@ export default function ProfileAvatar({
 
   const profileLink = isOwner ? "/profile" : `/profile/${name}`;
 
+  if (noClick) {
+    return (
+      <div className={cn("flex gap-1 ", className)}>
+        <Avatar className="h-8 w-8 hidden md:block">
+          <AvatarImage src={avatar.url} alt={avatar.alt} />
+          <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+        </Avatar>
+        <p className={cn("px-1 hidden my-auto font-medium text-sm md:block")}>
+          {name}
+        </p>
+      </div>
+    );
+  }
+
   // Conditionally render the name tag based on screen width.
   if (willFit) {
     return (
@@ -43,10 +57,7 @@ export default function ProfileAvatar({
             href={profileLink}
             className={cn(
               buttonVariants({ variant: "link" }),
-              "px-1 hidden md:block",
-              {
-                "hover:no-underline pointer-events-none": noClick,
-              }
+              "px-1 hidden md:block"
             )}
           >
             {name}
@@ -64,9 +75,7 @@ export default function ProfileAvatar({
       </Avatar>
       <Link
         href={profileLink}
-        className={cn(buttonVariants({ variant: "link" }), "px-1", {
-          "hover:no-underline pointer-events-none": noClick,
-        })}
+        className={cn(buttonVariants({ variant: "link" }), "px-1")}
       >
         {name}
       </Link>

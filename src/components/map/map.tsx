@@ -5,18 +5,20 @@ import { Loader } from "@googlemaps/js-api-loader";
 import mapStyle from "./mapStyle.json";
 import { VenueType } from "@/lib/validation/types";
 import MarkerDropdown from "./marker";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client"; // Import createRoot
 import { useSearchParams } from "next/navigation";
+import VenueCard from "../cards/venue-card-sm";
 
 interface MapProps {
   address?: string;
-  data: VenueType[];
+  data?: VenueType[];
 }
 
 export default function Map({ address, data }: MapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder | null>(null);
+  const [noAddressFound, setNoAddressFound] = useState(false); // State for "No address found" message
 
   const searchParams = useSearchParams();
   const searchValue = searchParams.get("search");
@@ -65,7 +67,7 @@ export default function Map({ address, data }: MapProps) {
       }
 
       // Add markers for each venue
-      const markers = data.map((venue) => {
+      const markers = data?.map((venue) => {
         const marker = new google.maps.Marker({
           map: mapInstance,
           position: { lat: venue.location.lat!, lng: venue.location.lng! },
@@ -90,7 +92,7 @@ export default function Map({ address, data }: MapProps) {
 
       // Check if searchParams matches any venue and trigger the same behavior as clicking the marker
       if (searchValue) {
-        const matchingVenue = markers.find(
+        const matchingVenue = markers?.find(
           ({ venue }) => venue.name.toLowerCase() === searchValue.toLowerCase()
         );
 
@@ -111,7 +113,18 @@ export default function Map({ address, data }: MapProps) {
   ) => {
     const content = infoWindow.getContent() as HTMLElement;
     content.id = `marker-${venue.id}`;
-    ReactDOM.render(<MarkerDropdown venue={venue} />, content);
+
+    const root = createRoot(content); // Use createRoot
+    root.render(
+      <div
+        style={{
+          width: "250px",
+          // height: "300px",
+        }}
+      >
+        <VenueCard venue={venue} xs />
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -119,19 +132,30 @@ export default function Map({ address, data }: MapProps) {
       geocoder.geocode({ address }, (results, status) => {
         if (status === "OK" && results[0]) {
           map.setCenter(results[0].geometry.location);
+          map.setZoom(12);
           new google.maps.Marker({
             map,
             position: results[0].geometry.location,
-            icon: customIconUrl, // Use custom icon
+            icon: customIconUrl,
           });
+          setNoAddressFound(false);
         } else {
           console.error(
             `Geocode was not successful for the following reason: ${status}`
           );
+          setNoAddressFound(true); // No address found
         }
       });
     }
   }, [address, map, geocoder]);
 
-  return <div style={{ height: "100%", width: "100%" }} ref={mapRef} />;
+  return (
+    <div style={{ height: "100%", width: "100%" }}>
+      {noAddressFound ? (
+        <div>Location not found...</div>
+      ) : (
+        <div ref={mapRef} style={{ height: "100%", width: "100%" }} />
+      )}
+    </div>
+  );
 }

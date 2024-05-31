@@ -17,14 +17,33 @@ export default async function VenuePage({
 }: {
   params: { slug: string };
 }) {
+  const id = params.slug && params.slug[0] ? params.slug[0] : undefined;
+
+  if (!id) {
+    return (
+      <div className="pt-[30vh] text-lg">
+        Venue id not found <span className="text-3xl">🤒</span>
+      </div>
+    );
+  }
   // let data = null;
   let isOwner = false;
+  let isLoggedIn = false;
   const username = cookies().get("username");
-  const { data: venue, error: error } = await fetchVenueById(params.slug[0]);
+  const { data: venue, error: error } = await fetchVenueById(id);
+
+  if (!venue) {
+    return (
+      <div className=" pt-[30vh] text-lg">
+        No Venue with id {id} found <span className="text-3xl mx-2">🤒</span>
+      </div>
+    );
+  }
 
   if (username) {
+    isLoggedIn = true;
     const { data: profile, error: profileError } = await fetchProfileByName(
-      "bjerkeset"
+      username.value
     );
     if (profileError) {
       return <ErrorToast error={profileError} />;
@@ -34,18 +53,12 @@ export default async function VenuePage({
       isOwner = true;
     }
   }
-
-  // const cookieStore = cookies();
-  // const accessToken = cookieStore.get("accessToken");
-
   if (error) {
     return <ErrorToast error={error} />;
   }
-
   if (!venue || venue === null) {
     return <p>Could not find venue</p>;
   }
-
   if (isOwner && params.slug[1] === "update") {
     return (
       <div className="flex items-center h-full w-full px-3">
@@ -53,10 +66,10 @@ export default async function VenuePage({
       </div>
     );
   }
-  console.log("venue----", venue);
+
   return (
-    <div className="flex flex-col w-full justify-between md:w-auto md:border md:shadow md:my-10 md:rounded-xl overflow-hidden max-w-screen-lg">
-      <VenueCardXl isOwner={isOwner} venue={venue} />
+    <div className="flex flex-col w-full justify-between md:border md:shadow md:my-10 md:rounded-xl  max-w-screen-lg ">
+      <VenueCardXl isOwner={isOwner} isLoggedIn={isLoggedIn} venue={venue} />
       {/* {!isOwner && <CheckoutForm venue={venue} />} */}
       {isOwner && (
         <div className="flex fixed bottom-0 w-full items-center border-t p-2 justify-between bg-background md:hidden ">

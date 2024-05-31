@@ -23,16 +23,18 @@ type Props = {
 };
 
 export default async function ProfilePage({ params, searchParams }: Props) {
-  console.log("searchparams", searchParams);
   const { slug } = params;
   let profileQuery = undefined;
   let username = undefined;
+  let isLoggedIn = false;
+
+  username = cookies().get("username");
+
+  if (!username?.value) {
+    redirect("/profile/auth");
+  }
 
   if (!slug) {
-    username = cookies().get("username");
-    if (!username?.value) {
-      redirect("/profile/auth");
-    }
     profileQuery = username.value;
   } else {
     profileQuery = slug;

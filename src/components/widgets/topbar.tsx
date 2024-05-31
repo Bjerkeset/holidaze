@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils/utils";
 import { cookies } from "next/headers";
 import NavLinks from "./nav-links";
 
+import Image from "next/image";
+
 type Props = {};
 
 export default async function Topbar({}: Props) {
@@ -18,9 +20,14 @@ export default async function Topbar({}: Props) {
 
   return (
     <nav className="flex w-full justify-between px-2 py-1 items-center max-w-screen-2xl mx-auto">
-      <Link href={"/"}>
-        {/* <Image src={""} alt={""} /> */}
-        Logo
+      <Link href={"/"} className="">
+        <Image
+          src={"/logo-sized-original.png"}
+          alt={"ddsadas"}
+          height={40}
+          width={40}
+        />
+        {/* <img src={"/public/vercel.svg"} alt={"ddsadas"} /> */}
       </Link>
       <div className="flex gap-2 items-center">
         {username && <NavLinks isTopbar />}

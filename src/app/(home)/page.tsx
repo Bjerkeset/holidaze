@@ -103,7 +103,7 @@ export default async function Home({ searchParams }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-10  ">
-      <div className="relative w-screen h-[30vh]">
+      <div className="relative w-screen h-[40vh]">
         <Map data={venuesEurope} />
         <div className="absolute bottom-5 mx-auto w-full flex justify-center">
           <CommandSearch searchParams={searchParams} commands={commands} />

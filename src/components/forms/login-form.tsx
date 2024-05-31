@@ -12,7 +12,8 @@ import { useRouter } from "next/navigation";
 import { loginUser } from "@/lib/server/api/api.action";
 import { toast } from "sonner";
 import { cookies } from "next/headers";
-import { LoginSchema, LoginType } from "@/lib/validation/schemas";
+import { LoginSchema } from "@/lib/validation/schemas";
+import { LoginType } from "@/lib/validation/types";
 
 export default function LoginForm() {
   const router = useRouter();

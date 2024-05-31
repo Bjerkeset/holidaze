@@ -226,54 +226,6 @@ export default async function DashboardPage() {
         </TabsContent>
         <TabsContent value="bookings" className="">
           <BookingList bookings={allBookings} username={username.value} />
-          {/* {allBookings.map((booking) => (
-            <Link
-              key={booking.id}
-              className={cn(
-                "flex shadow p-2 text-sm my-2 rounded-none hover:bg-secondary transition-colors duration-200"
-              )}
-              href={`/venue/${booking.venueId}`}
-            >
-              <div className="flex flex-col items-center  w-1/6 ">
-                {booking.customer && (
-                  <ProfileAvatar
-                    isOwner={username.name === booking.customer.name}
-                    willFit
-                    profile={booking.customer}
-                    className={cn("")}
-                  />
-                )}
-                <p className="text-xs text-nowrap hidden md:block">
-                  Created{" "}
-                  {formatTimeFrame(booking.created, new Date()) + " ago"}
-                </p>
-              </div>
-              <div className="text-xs flex flex-col items-center w-full justify-between ">
-                <p className="text-sm md:text-base font-semibold">
-                  {booking.venueTitle}
-                </p>
-                <p className="flex gap-1">
-                  <span className="hidden sm:block">From - </span>{" "}
-                  {formatDate(booking.dateFrom)}
-                </p>
-              </div>
-              <div className="text-xs flex flex-col items-center w-full lg:w-1/4  justify-between ">
-                <div className="flex justify-start w-full items-center gap-1 h-full">
-                  <Badge className="text-nowrap bg-green-500/80 rounded-full">
-                    + ${booking.venuePrice * booking.guests}
-                  </Badge>
-                  <div className="flex flex-col items-end justify-around w-full h-full ">
-                    <p className="text-nowrap text-xs md:text-sm pr-0 md:pr-4">
-                      {booking.guests} Guest{booking.guests > 1 && "s"}
-                    </p>
-                    <p className="pr-0 md:pr-1 hidden md:block">
-                      {formatTimeFrame(booking.dateFrom, booking.dateTo)} booked
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))} */}
         </TabsContent>
       </Tabs>
     </section>

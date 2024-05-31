@@ -33,8 +33,8 @@ export default function FeaturedFeed({ venues, isSmall }: Props) {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="hidden md:flex" />
-          <CarouselNext className="hidden md:flex" />
+          <CarouselPrevious className="hidden 2xl:flex" />
+          <CarouselNext className="hidden  2xl:flex" />
         </Carousel>
       </div>
     </div>
