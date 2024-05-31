@@ -347,6 +347,127 @@ export async function createBooking({
   }
 }
 
+export async function fetchBookingsByProfile({
+  profileName,
+  includeCustomer = true,
+  includeVenue = true,
+}: {
+  profileName: string;
+  includeCustomer?: boolean;
+  includeVenue?: boolean;
+}): Promise<APIResponse<Array<BookingType>, MetaType>> {
+  const accessToken = cookies().get("accessToken")?.value.toString();
+  if (!accessToken) {
+    console.error("Access token not found!");
+    return {
+      meta: MetaSchema.parse({}),
+      error: {
+        errors: [
+          {
+            message: "Access token not found",
+            code: "access_token_missing",
+            path: [],
+          },
+        ],
+        status: "Error",
+        statusCode: 401,
+      },
+    };
+  }
+  const apiKeyResponse = await createApiKey(
+    accessToken,
+    "Optional API Key Name"
+  );
+
+  // Ensure that apiKeyResponse contains data before attempting to use it
+  if (apiKeyResponse.error || !apiKeyResponse.data) {
+    console.error(
+      "Failed to retrieve API Key:",
+      apiKeyResponse.error || "No data received"
+    );
+    return {
+      meta: MetaSchema.parse({}),
+      error: apiKeyResponse.error || {
+        errors: [
+          {
+            message: "No API key data received",
+            code: "api_key_missing",
+            path: [],
+          },
+        ],
+        status: "Error",
+        statusCode: 500,
+      },
+    };
+  }
+
+  const apiKey = apiKeyResponse.data.key; // Now safe to access `key` as we've confirmed `data` is not undefined
+
+  const queryParameters = new URLSearchParams({
+    _customer: includeCustomer ? "true" : "false",
+    _venue: includeVenue ? "true" : "false",
+  });
+
+  try {
+    const response = await fetch(
+      `${BASE}/holidaze/profiles/${profileName}/bookings?${queryParameters}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+          "X-Noroff-API-Key": apiKey, // Use the retrieved API key
+        },
+      }
+    );
+
+    if (!response.ok) {
+      const errorResponse = await response.json();
+      errorResponse.errors.forEach((err: any) =>
+        console.error("--- At fetchBookingsByProfile() -->", err.message)
+      );
+      return {
+        meta: MetaSchema.parse({}),
+        error: errorResponse,
+      };
+    }
+
+    const jsonResponse = await response.json();
+    console.log("API Response:", jsonResponse);
+
+    const data = jsonResponse.data.map((item: any) => {
+      const booking = BookingSchema.parse(item);
+      return {
+        ...booking,
+        venue: item.venue ? VenueSchema.parse(item.venue) : null,
+      };
+    });
+    const meta = MetaSchema.parse(jsonResponse.meta);
+
+    return {
+      data,
+      meta,
+      error: undefined,
+    };
+  } catch (error: any) {
+    console.error("Failed to fetch bookings by profile:", error.message);
+    return {
+      meta: MetaSchema.parse({}), // Provide default or empty meta
+      error: {
+        errors: [
+          {
+            message: error.message || "An error occurred",
+            code: "internal_error",
+            path: [],
+          },
+        ],
+        status: "Internal Server Error",
+        statusCode: 500,
+      },
+    };
+  }
+}
+
 export async function fetchBookings({
   includeCustomer,
   includeVenue,

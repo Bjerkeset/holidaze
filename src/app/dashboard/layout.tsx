@@ -1,5 +1,4 @@
 import Bottombar from "@/components/widgets/bottombar";
-import Footer from "@/components/widgets/footer";
 import Topbar from "@/components/widgets/topbar";
 import type { Metadata } from "next";
 
@@ -16,11 +15,10 @@ export default function DashboardLayout({
   return (
     <>
       <Topbar />
-      <main className="flex flex-col items-center min-w-screen bg-background min-h-screen border-t pt-2">
+      <main className="flex flex-col items-center min-w-screen bg-background min-h-screen border-t pt-2 pb-16">
         {children}
       </main>
       <Bottombar />
-      <Footer />
     </>
   );
 }

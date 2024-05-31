@@ -161,8 +161,11 @@ const emailDomainCheck = (email: string) => {
 export const BaseProfileSchema = z.object({
   name: z
     .string()
-    .min(3, { message: "Name must be at least 3 characters long." })
-    .max(20, { message: "Name must not exceed 20 characters." }),
+    .min(4, { message: "Name must be at least 3 characters long." })
+    .max(20, { message: "Name must not exceed 20 characters." })
+    .refine((name) => !name.includes(" "), {
+      message: "Name must not contain spaces.",
+    }),
   email: z
     .string()
     .email({ message: "Invalid email address format." })

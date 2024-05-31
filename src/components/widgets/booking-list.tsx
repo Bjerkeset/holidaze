@@ -54,6 +54,20 @@ export default function BookingList({
   const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
 
+  const renderBadge = (booking: ExpandedBookingType) => {
+    const isCustomer = username === booking.customer?.name;
+    const badgeText = `${isCustomer ? "-" : "+"} $${
+      booking.venuePrice * booking.guests
+    }`;
+    const badgeColor = isCustomer ? "bg-red-500/80" : "bg-green-500/80";
+
+    return (
+      <Badge className={`text-nowrap rounded-full ${badgeColor}`}>
+        {badgeText}
+      </Badge>
+    );
+  };
+
   if (collapsible) {
     return (
       <div className="px-6">
@@ -141,11 +155,7 @@ export default function BookingList({
                 </div>
                 <div className="text-xs flex flex-col items-center w-full lg:w-1/4 justify-between">
                   <div className="flex justify-start w-full items-center gap-1 h-full">
-                    {"venuePrice" in booking && (
-                      <Badge className="text-nowrap bg-green-500/80 rounded-full">
-                        + ${booking.venuePrice * booking.guests}
-                      </Badge>
-                    )}
+                    {renderBadge(booking)}
                     <div className="flex flex-col items-end justify-around w-full h-full">
                       <p className="text-nowrap text-xs md:text-sm pr-0 md:pr-4">
                         {booking.guests} Guest{booking.guests > 1 && "s"}
@@ -213,11 +223,7 @@ export default function BookingList({
               </div>
               <div className="text-xs flex flex-col items-center w-full lg:w-1/4 justify-between">
                 <div className="flex justify-start w-full items-center gap-1 h-full">
-                  {"venuePrice" in booking && (
-                    <Badge className="text-nowrap bg-green-500/80 rounded-full">
-                      + ${booking.venuePrice * booking.guests}
-                    </Badge>
-                  )}
+                  {renderBadge(booking)}
                   <div className="flex flex-col items-end justify-around w-full h-full">
                     <p className="text-nowrap text-xs md:text-sm pr-0 md:pr-4">
                       {booking.guests} Guest{booking.guests > 1 && "s"}
@@ -290,11 +296,7 @@ export default function BookingList({
           </div>
           <div className="text-xs flex flex-col items-center w-full lg:w-1/4 justify-between">
             <div className="flex justify-start w-full items-center gap-1 h-full">
-              {"venuePrice" in booking && (
-                <Badge className="text-nowrap bg-green-500/80 rounded-full">
-                  + ${booking.venuePrice * booking.guests}
-                </Badge>
-              )}
+              {renderBadge(booking)}
               <div className="flex flex-col items-end justify-around w-full h-full">
                 <p className="text-nowrap text-xs md:text-sm pr-0 md:pr-4">
                   {booking.guests} Guest{booking.guests > 1 && "s"}

@@ -87,6 +87,7 @@ export type BookingType = {
   created: string;
   updated: string;
   customer: CustomerType | null;
+  venue: VenueType | null;
 };
 
 export type ExpandedBookingType = BookingType & {

@@ -25,7 +25,7 @@ import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
-import { registerUser } from "@/lib/server/api/api.action";
+import { loginUser, registerUser } from "@/lib/server/api/api.action";
 import { useRouter } from "next/navigation";
 import { Switch } from "@/components/ui/switch";
 import CustomFormField from "@/components/ui/custom-form-field";
@@ -51,12 +51,6 @@ export default function RegisterForm() {
     },
   });
 
-  // const {
-  //   handleSubmit,
-  //   formState: { errors },
-  // } = form;
-  // console.log("errors", errors);
-
   async function onSubmit(data: RegistrationType) {
     setIsLoading(true);
     try {
@@ -64,11 +58,19 @@ export default function RegisterForm() {
       if (res.error) {
         console.error("An error occurred:", res.error);
         setHasError(true);
-        setTimeout(() => setHasError(false), 1000); // Reset error state after 2 seconds
+        setTimeout(() => setHasError(false), 1000);
         res.error.errors.forEach((err) => toast.error(err.message));
         return;
       }
       toast.success("User registered successfully!");
+      const loginResponse = await loginUser({
+        email: data.email,
+        password: data.password,
+      });
+      if (loginResponse.error) {
+        loginResponse.error.errors.forEach((err) => toast.error(err.message));
+        return;
+      }
       router.push("/");
     } catch (error: any) {
       setHasError(true);
@@ -87,7 +89,7 @@ export default function RegisterForm() {
   }
 
   return (
-    <Card className="w-[300px]  md:w-[500px] max-w-screen-md">
+    <Card className="w-full">
       <CardHeader className="">
         <CardTitle>Register</CardTitle>
         <CardDescription className="">
@@ -123,7 +125,7 @@ export default function RegisterForm() {
               <CustomFormField
                 form={form}
                 formName={"name"}
-                formTitle={"Name"}
+                formTitle={"username"}
                 description={"Enter your name here."}
                 inputType="text"
               />
@@ -183,23 +185,6 @@ export default function RegisterForm() {
             </motion.div>
             <div className="absolute bottom-0 right-0 ">
               <Button
-                type="submit"
-                variant={hasError ? "destructive" : "default"}
-                className={cn(
-                  {
-                    hidden: formStep === 0,
-                  },
-                  "w-20"
-                )}
-              >
-                {isLoading ? (
-                  <ReloadIcon className="animate-spin" />
-                ) : (
-                  "Register"
-                )}
-              </Button>
-
-              <Button
                 type="button"
                 className={cn({
                   hidden: formStep === 1,
@@ -221,6 +206,22 @@ export default function RegisterForm() {
                 variant={"outline"}
               >
                 Go Back
+              </Button>
+              <Button
+                type="submit"
+                variant={hasError ? "destructive" : "default"}
+                className={cn(
+                  {
+                    hidden: formStep === 0,
+                  },
+                  "w-20 ml-2"
+                )}
+              >
+                {isLoading ? (
+                  <ReloadIcon className="animate-spin" />
+                ) : (
+                  "Register"
+                )}
               </Button>
             </div>
           </form>

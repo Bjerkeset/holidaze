@@ -14,7 +14,6 @@ export function SortButtonGroup({ searchParams }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const sortParams = searchParams.sort;
-  console.log("search----params", searchParams);
 
   function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
     const buttonId = event.currentTarget.id;

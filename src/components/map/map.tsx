@@ -22,7 +22,6 @@ export default function Map({ address, data }: MapProps) {
 
   const searchParams = useSearchParams();
   const searchValue = searchParams.get("search");
-  console.log("searchparams", searchValue);
 
   // Function to convert SVG to Data URL
   const svgToDataURL = (svg: string) => {

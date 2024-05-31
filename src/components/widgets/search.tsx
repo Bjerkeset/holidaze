@@ -81,7 +81,7 @@ export default function CommandSearch({
       <div ref={commandRef} className="relative w-full ">
         <Command className={cn("rounded-lg border shadow-md w-full space-y-1")}>
           <CommandInput
-            placeholder="Type to search..."
+            placeholder="Search by address..."
             value={inputValue}
             onValueChange={handleValueChange}
             onKeyDown={handleKeyDown}

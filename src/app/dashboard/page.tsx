@@ -2,11 +2,11 @@ import VenueCard from "@/components/cards/venue-card-sm";
 import ChartWapper from "@/components/feeds/chart-wapper";
 import VenuesGrid from "@/components/feeds/venues-grid";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import BookingList from "@/components/widgets/booking-list";
 import ErrorToast from "@/components/widgets/error";
 import {
+  fetchBookingsByProfile,
   fetchProfileByName,
   fetchVenuesByProfile,
 } from "@/lib/server/api/api.action";
@@ -16,12 +16,12 @@ import {
   groupByWeek,
   calculatePercentageChange,
   getLatestPurchasePrice,
-  formatTimeFrame,
   cn,
 } from "@/lib/utils/utils";
 import {
   BookingType,
   CustomerType,
+  SearchParamsType,
   StatisticsCardProps,
   VenueType,
 } from "@/lib/validation/types";
@@ -30,11 +30,30 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import StatisticsCard from "@/components/cards/statistics-card";
-import ProfileAvatar from "@/components/widgets/profile-avatar";
-import { Badge } from "@/components/ui/badge";
 import Table from "@/components/table/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
-export default async function DashboardPage() {
+import {
+  IoInformationCircle,
+  IoInformationCircleOutline,
+} from "react-icons/io5";
+import ViewBookingsButtonGroup from "@/components/buttons/view-bookings-button-group";
+
+type Props = {
+  searchParams: SearchParamsType;
+};
+
+export default async function DashboardPage({ searchParams }: Props) {
   const username = cookies().get("username");
   if (!username) {
     redirect("/profile/auth");
@@ -45,7 +64,12 @@ export default async function DashboardPage() {
   const { data: venues, error: venueError } = await fetchVenuesByProfile(
     username.value
   );
-  if (venueError || profileError) {
+  const { data: bookingsByProfile, error: bookingByProfileError } =
+    await fetchBookingsByProfile({
+      profileName: profile!.name,
+    });
+  console.log("------bookingsByProfile--------", bookingsByProfile);
+  if (venueError || profileError || bookingByProfileError) {
     return ErrorToast({ error: venueError || profileError || fallbackError });
   }
   if (!profile) {
@@ -54,8 +78,6 @@ export default async function DashboardPage() {
   const { venueManager } = profile;
 
   const count = profile._count;
-
-  console.log("count------", count);
 
   // Create chart data and aggregate values for duplicate dates
   const chartData = (venues || []).reduce<{ time: string; value: number }[]>(
@@ -86,13 +108,10 @@ export default async function DashboardPage() {
     (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
   );
 
-  console.log("sorted chart data-----", sortedChartData);
-
   const totalRevenue = sortedChartData.reduce(
     (total, entry) => total + entry.value,
     0
   );
-  console.log("totla revenue---", totalRevenue);
 
   // Group data by week
   const weeklyRevenue = groupByWeek(sortedChartData);
@@ -133,13 +152,19 @@ export default async function DashboardPage() {
     }))
   );
 
-  console.log("Latest Purchase Price:", latestPurchasePrice);
-  console.log("current week revenue---", currentWeekRevenue);
-  console.log("last week revenue---", lastWeekRevenue);
-  console.log("percentage change---", percentageChange);
-  console.log("current week bookings---", currentWeekBookings);
-  console.log("last week bookings---", lastWeekBookings);
-  console.log("allBookings-------", allBookings);
+  // Map profile bookings to the same format as venue bookings
+  const profileBookings = (bookingsByProfile || []).map((booking) => ({
+    ...booking,
+    venueTitle: booking.venue?.name || "Unknown Venue",
+    venueId: booking.venue?.id || "Unknown ID",
+    venuePrice: booking.venue?.price || 0,
+  }));
+
+  console.log("searchparams-------", searchParams.search);
+  let bookings = profileBookings;
+  if (searchParams.search === "incoming") {
+    bookings = allBookings;
+  }
 
   const STATS_DATA = [
     {
@@ -171,9 +196,9 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <section className="mx-auto w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-2xl px-4 pb-4 border rounded-2xl">
+    <section className="mx-auto w-full md:max-w-screen-md lg:max-w-screen-lg xl:max-w-screen-2xl px-4 pb-4 md:border rounded-2xl">
       <div className="py-4 flex justify-between flex-wrap gap-2">
-        <h1 className="text-2xl">Dashboard</h1>
+        <h1 className="text-2xl font-bold">Dashboard</h1>
         {venueManager ? (
           <div className="flex gap-2 items-center">
             <Link
@@ -190,7 +215,23 @@ export default async function DashboardPage() {
             </Button>
           </div>
         ) : (
-          <Button>Upgrade to Manager</Button>
+          <div className="flex ">
+            <Link
+              className={cn(buttonVariants({ variant: "default" }))}
+              href={"/profile/edit"}
+            >
+              Upgrade
+            </Link>
+            <h2 className="text-xs"></h2>
+            <Popover>
+              <PopoverTrigger className="mt-auto">
+                <IoInformationCircle className=" h-6 w-auto text-primary" />
+              </PopoverTrigger>
+              <PopoverContent>
+                <p>Become a venue manger to create venues </p>
+              </PopoverContent>
+            </Popover>
+          </div>
         )}
       </div>
       <Tabs defaultValue="overview" className="w-full">
@@ -224,8 +265,13 @@ export default async function DashboardPage() {
         <TabsContent value={"list"}>
           <Table data={venues} />
         </TabsContent>
-        <TabsContent value="bookings" className="">
-          <BookingList bookings={allBookings} username={username.value} />
+        <TabsContent value="bookings">
+          <ViewBookingsButtonGroup isVenueManager={venueManager} />
+          {allBookings.length > 0 ? (
+            <BookingList bookings={bookings} username={username.value} />
+          ) : (
+            <div>No Bookings here</div>
+          )}
         </TabsContent>
       </Tabs>
     </section>

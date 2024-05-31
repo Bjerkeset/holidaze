@@ -176,7 +176,7 @@ export default function CreateVenueForm({
                     form={form}
                     formName={"price"}
                     formTitle={"Price"}
-                    description={"Enter the venue price here."}
+                    description={"Enter the venue price in USD."}
                     inputType="number"
                   />
                   <CustomFormField
@@ -380,7 +380,7 @@ export default function CreateVenueForm({
                     form={form}
                     formName={"price"}
                     formTitle={"Price"}
-                    description={"Enter the venue price here."}
+                    description={"Enter the venue price in USD."}
                     inputType="number"
                   />
                   <CustomFormField
