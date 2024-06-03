@@ -142,12 +142,12 @@ export default function CheckoutFormWrapper({ venue, isLoggedIn }: Props) {
               initial={{ y: "70vh", opacity: 0 }} // Start from the middle of the screen
               animate={{ y: 0, opacity: 1 }} // Move to the top
               exit={{ y: "-100vh", opacity: 0 }} // Exit towards the bottom
-              transition={{ ease: "easeInOut", duration: 0.6 }} // Customize timing and easing
-              className="h-[50vh] z-50 fixed inset-x-0 top-0"
+              transition={{ ease: "easeInOut", duration: 0.6 }}
+              className="h-[50vh] z-50 fixed inset-x-0 top-0 bg-gradient-to-b from-black/75 to-black-0 "
             >
               <div className="w-full flex flex-col items-center text-white pt-3">
                 <h2 className="text-xl">{venue.name}</h2>
-                <div className="flex gap-4">
+                {/* <div className="flex gap-4">
                   <p>
                     {date?.from
                       ? formatDate(date.from, "LLL dd")
@@ -159,7 +159,7 @@ export default function CheckoutFormWrapper({ venue, isLoggedIn }: Props) {
                       ? formatDate(date.to, "LLL dd yyyy")
                       : "Select a date"}
                   </p>
-                </div>
+                </div> */}
               </div>
             </motion.div>
           )}
