@@ -1,6 +1,13 @@
 # Holidaze
 
-Holidaze is a accomidation applcation for the Noroff year 2 Exam front-end development studies.
+An accomidation applcation project for the Noroff year 2 Exam front-end development studies.
+
+## Resources
+
+- [Live site](https://holidaze-mu.vercel.app/) - Visit holidaze deployed at Vercel
+- [Figma](https://www.figma.com/design/vJoVUteCMBNhQjA3VUm5bl/Holidaze?node-id=0-1) - UX/UI Design template
+- [Gantt](https://drive.google.com/file/d/1cq8nENckSwzbKHJkTZDk05MBO8jEp8lh/view?usp=sharing) - Planning Gantt Chart
+- [Report](https://docs.google.com/document/d/12utluuBP4DqwpdL2kILTiv2gtPLgS7WXXyO6AOgMfZ0/edit?usp=sharing) - Project Report
 
 ## Getting Started
 
@@ -12,7 +19,7 @@ npm i
 npm run dev
 ```
 
-For the full feature you must start by adding google maps api key to `.env`.
+To test all feature you must add a google maps api key to `.env`.
 
 Then open [http://localhost:3000](http://localhost:3000) with your browser
 
@@ -22,34 +29,36 @@ Then open [http://localhost:3000](http://localhost:3000) with your browser
 
 - [Nextjs 14.2 ](https://nextjs.org/docs) - Modern full-stack web development framework.
 - [Typescipt](https://www.typescriptlang.org/) - Typed superset of JavaScript that compiles to plain JavaScript.
-- [google maps](https://developers.google.com/maps/documentation) - Provides geographical data and mapping capabilities.
+- [Google maps](https://developers.google.com/maps/documentation) - Provides geographical data and mapping capabilities.
 - [Trading View](https://tradingview.github.io/lightweight-charts/) - Financial visualization tool.
-- [luxor](https://moment.github.io/luxon/#/?id=luxon) - Library for working with dates and times.
-- [shadcn](https://ui.shadcn.com/) - Collection of modern and reusable React components.
+- [Luxor](https://moment.github.io/luxon/#/?id=luxon) - Library for working with dates and times.
+- [Shadcn](https://ui.shadcn.com/) - Collection of modern and reusable React components.
 - [React Hook Form](https://react-hook-form.com/) - Performant and flexible forms with easy-to-use validation.
-- [zod](https://zod.dev/) - TypeScript-first schema declaration and validation library.
-- [sonner](https://sonner.emilkowal.ski/) - Simple toast notifications for React applications.
+- [Zod](https://zod.dev/) - TypeScript-first schema declaration and validation library.
+- [Sonner](https://sonner.emilkowal.ski/) - Simple toast notifications for React applications.
 
 ### User-facing Features
 
 - View a list of venues
-- Search for a specific venue
+- Search venues within a location
 - View venue details
 - View availability calendar
-- Register as a customer or venue mananger
+- Register and login as a customer or venue mananger
 - Book a venue
 - Create a venue as a mananger
 - View upcoming bookings
-- View avaible venues filtered by location
+- Filter venues by popularity.
 - View sales statistics on a dashboard
 
-## The Project
+---
 
-Holidaze provides a platform for users to book holiday accommodations and for venue managers to manage their venues and bookings. The application is designed with a modern user interface and user experience in mind.
+## About the Project
+
+### Introduction
+
+Holidaze is an accommodation booking platform designed so that users can easily book their holiday, and for the venue managers to have a clear overview of their bookings and venues. The application is designed with a modern user interface and user experience in mind. This project, spanning over eight weeks, served as a capstone to demonstrate the skills and knowledge acquired over a two-year front-end development curriculum.
 
 ### Summary
-
-Holidaze is an accommodation booking platform designed to provide a user-friendly experience for users to book holiday accommodations and for venue managers to manage their venues and bookings. The project, spanning over eight weeks, served as a capstone to demonstrate the skills and knowledge acquired over a two-year front-end development curriculum.
 
 The application is built with modern web development principles, emphasizing a minimalistic and mobile-first design approach. The visual design focuses on readability and accessibility, using ample white space, a neutral color palette, and consistent typography. The user interface adapts to both mobile and desktop devices, ensuring optimal usability across all platforms. User experience is prioritized by minimizing the number of clicks required for common actions and enhancing user feedback through alerts, popups, and toasts.
 
@@ -73,11 +82,11 @@ The user experience is designed to be straightforward and efficient. Customers c
 
 #### Development
 
-The development principles for Holidaze revolve around the use of React functional components. The site structure is divided into pages, leveraging Next.js server components to make the root page asynchronous, enabling efficient data fetching and manipulation from the backend API. Data is passed down to each child component in the tree, ensuring a streamlined and organized development process.
+The development principles for Holidaze revolve around the use of React functional components. The site structure is divided into pages, leveraging Next.js server components to make the root page asynchronous, enabling efficient data fetching and manipulation from the backend API. Data is passed down to each child component from the page root, ensuring an efficient and organized data structure.
 
 **API Integration**
 
-We use Next.js server actions to create fetch functions that interact with the Noroff API. Each fetch function acts as its own server, interacting directly with the Noroff server. This approach results in a faster and more scalable site. The fetch functions share a similar structure, returning predefined objects, which makes front-end function calls shorter, predictable, and easier error handeling.
+We use Next.js server actions to create fetch functions that interact with the Noroff API. Each fetch function acts as its own server, interacting directly with the Noroff server. This approach results in a faster and more scalable site. The fetch functions share a similar structure, returning predefined objects, which makes front-end function calls shorter, predictable, and easier error handling.
 
 **Homepage**
 
@@ -108,5 +117,3 @@ The API, developed by an external team, presented some limitations for the siteâ
 ### Conclusion
 
 Holidaze is a comprehensive accommodation booking application that showcases the skills and knowledge acquired over two years of study. The project was a valuable learning experience, highlighting the importance of planning, design, and iterative development.
-
-## Development Details
