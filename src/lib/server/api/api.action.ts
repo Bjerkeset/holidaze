@@ -1025,11 +1025,10 @@ export async function registerUser(
     };
   }
 }
-
 export async function loginUser(
   loginDetails: LoginType
 ): Promise<APIResponse<ProfileType>> {
-  let responseData: any; // Define responseData to hold the response data
+  let responseData: any;
 
   try {
     const response = await fetch(`${BASE}/auth/login`, {
@@ -1040,9 +1039,16 @@ export async function loginUser(
       body: JSON.stringify(loginDetails),
     });
 
-    if (!response.ok) {
-      const errorResponse: ErrorObj = await response.json();
-      console.error("HTTP error! Status:", response.status, errorResponse);
+    responseData = await response.json();
+
+    // Check if the response contains an embedded error status
+    if (responseData.statusCode === 401) {
+      const errorResponse: ErrorObj = responseData;
+      console.error(
+        "HTTP error! Status:",
+        responseData.statusCode,
+        errorResponse
+      );
       return {
         meta: {},
         data: undefined,
@@ -1050,8 +1056,7 @@ export async function loginUser(
       };
     }
 
-    responseData = await response.json(); // Assign response data to responseData
-    const { data } = responseData; // Destructure data from responseData
+    const { data } = responseData;
     console.log("User logged in successfully:", data);
     cookies().set("accessToken", data.accessToken);
     cookies().set("username", data.name);

@@ -69,9 +69,11 @@ export default function LoginForm() {
             <div className="space-y-6">
               <CustomFormField
                 form={form}
+                dataTestId={"email"}
                 formName="email"
                 formTitle="Email"
                 description="Enter your email to log in."
+                inputType={"email"}
               />
               <CustomFormField
                 form={form}

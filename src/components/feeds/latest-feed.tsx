@@ -6,9 +6,15 @@ type Props = {
   venues: VenueType[];
   searchParams: SearchParamsType;
   count?: number;
+  isHomepage?: boolean;
 };
 
-export default function LatestFeed({ venues, searchParams, count }: Props) {
+export default function LatestFeed({
+  venues,
+  searchParams,
+  count,
+  isHomepage,
+}: Props) {
   return (
     <div>
       <div className="px-6 py-4">
@@ -22,7 +28,7 @@ export default function LatestFeed({ venues, searchParams, count }: Props) {
 
         <SortButtonGroup searchParams={searchParams} />
       </div>
-      <VenuesGrid venues={venues} />
+      <VenuesGrid venues={venues} isHomepage={isHomepage} />
     </div>
   );
 }

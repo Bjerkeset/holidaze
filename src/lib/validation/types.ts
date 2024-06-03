@@ -13,7 +13,7 @@ export type ErrorDetail = {
 export type ErrorObj = {
   errors: ErrorDetail[];
   status: string;
-  statusCode: 200 | 400 | 401 | 403 | 404 | 500;
+  statusCode: 400 | 401 | 403 | 404 | 500;
 };
 
 export type APIResponse<T, M = {}> = {

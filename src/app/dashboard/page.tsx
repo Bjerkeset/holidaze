@@ -68,7 +68,6 @@ export default async function DashboardPage({ searchParams }: Props) {
     await fetchBookingsByProfile({
       profileName: profile!.name,
     });
-  console.log("------bookingsByProfile--------", bookingsByProfile);
   if (venueError || profileError || bookingByProfileError) {
     return ErrorToast({ error: venueError || profileError || fallbackError });
   }
@@ -160,7 +159,6 @@ export default async function DashboardPage({ searchParams }: Props) {
     venuePrice: booking.venue?.price || 0,
   }));
 
-  console.log("searchparams-------", searchParams.search);
   let bookings = profileBookings;
   if (searchParams.search === "incoming") {
     bookings = allBookings;
@@ -235,9 +233,9 @@ export default async function DashboardPage({ searchParams }: Props) {
         )}
       </div>
       <Tabs defaultValue="overview" className="w-full">
-        <TabsList className=" justify-between px-6">
+        <TabsList className=" justify-between md:px-6 ">
           <div className="flex ">
-            <TabsTrigger className="text-xs sm:text-sm" value="overview">
+            <TabsTrigger className="text-xs sm:text-sm " value="overview">
               Overview
             </TabsTrigger>
             <TabsTrigger className="text-xs sm:text-sm" value="venues">

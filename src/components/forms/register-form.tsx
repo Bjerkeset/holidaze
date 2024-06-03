@@ -127,7 +127,7 @@ export default function RegisterForm() {
                 formName={"name"}
                 formTitle={"username"}
                 description={"Enter your name here."}
-                inputType="text"
+                inputType="name"
               />
               {/* Venue manager switch */}
               <FormField
@@ -214,13 +214,13 @@ export default function RegisterForm() {
                   {
                     hidden: formStep === 0,
                   },
-                  "w-20 ml-2"
+                  "w-25 ml-2"
                 )}
               >
                 {isLoading ? (
                   <ReloadIcon className="animate-spin" />
                 ) : (
-                  "Register"
+                  "Register Now"
                 )}
               </Button>
             </div>

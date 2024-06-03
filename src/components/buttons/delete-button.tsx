@@ -24,7 +24,6 @@ export default function DeleteButton({ id }: Props) {
   const router = useRouter();
   async function handleClick() {
     const res = await deleteVenue(id);
-    console.log("delete res", res);
     if (!res.error) {
       toast.success("Venue deleted");
       setTimeout(() => {

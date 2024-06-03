@@ -20,6 +20,7 @@ type Props = {
   isTextarea?: boolean;
   className?: string;
   inputType?: string;
+  dataTestId?: string;
 };
 
 export default function CustomFormField({
@@ -29,6 +30,7 @@ export default function CustomFormField({
   description,
   isTextarea,
   className,
+  dataTestId,
   formTitle,
   inputType = "text",
 }: Props) {
@@ -62,6 +64,7 @@ export default function CustomFormField({
               ) : (
                 <Input
                   {...commonProps}
+                  data-testid={dataTestId}
                   className={cn(baseClassName, className, "")}
                   type={inputType}
                 />

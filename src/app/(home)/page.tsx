@@ -89,20 +89,10 @@ export default async function Home({ searchParams }: Props) {
     // Default to latest venues in Europe
     sortedVenues = latestVenuesEurope;
   }
-  // Log venue name and id
-  // console.log(
-  //   "all venues",
-  //   sortedVenues.map((venue) => ({
-  //     name: venue.name,
-  //     rating: venue.rating,
-  //     created: formatDate(venue.created),
-  //   }))
-  // );
-  // Create a list for the location search.
   const commands = transformVenuesToCommands(venuesEurope || []);
 
   return (
-    <div className="flex flex-col items-center gap-10  ">
+    <div className="flex flex-col items-center gap-10  pb-40 ">
       <div className="relative w-screen h-[40vh]">
         <Map data={venuesEurope} />
         <div className="absolute bottom-5 mx-auto w-full flex justify-center">
@@ -114,6 +104,7 @@ export default async function Home({ searchParams }: Props) {
         searchParams={searchParams}
         count={metadata.totalCount}
         venues={sortedVenues}
+        isHomepage
       />
       {searchParams.sort === "all-latest" ||
       searchParams.sort === "all-popular" ? (

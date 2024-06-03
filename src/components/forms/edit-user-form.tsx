@@ -68,10 +68,8 @@ export default function EditUserForm({ user, isEdit }: Props) {
   }, [isEdit]);
 
   async function onSubmit(values: FormValues) {
-    console.log("values---", values);
     try {
       const response = await updateUser(user.name, values);
-      console.log("response", response);
       setOpen(false);
       router.refresh();
     } catch (error) {

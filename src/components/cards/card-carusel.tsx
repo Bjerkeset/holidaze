@@ -37,23 +37,6 @@ export function CardCarousel({ media }: Props) {
     });
   }, [api]);
 
-  //   if (media.length <= 1) {
-  //     return (
-  //       <div className="w-full bg-green-400">
-  //         <div className="flex aspect-square items-center justify-center w-full max-h-[50v] bg-green-400">
-  //           <Image
-  //             src={media[0].url}
-  //             fill
-  //             alt={media[0].alt || "Image"}
-  //             className="w-full h-full object-cover"
-  //           />
-  //         </div>
-  //       </div>
-  //     );
-  //   }
-
-  console.log("media", media);
-
   return (
     <div className="w-full h-full ">
       <Carousel setApi={setApi} className=" w-full p-1">

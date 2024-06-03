@@ -12,6 +12,7 @@ type Props = {
   currentUser?: string;
   md?: boolean;
   xs?: boolean;
+  isHomepage?: boolean;
 };
 
 export default function VenueCard({
@@ -20,6 +21,7 @@ export default function VenueCard({
   currentUser,
   md,
   xs,
+  isHomepage,
 }: Props) {
   let isOwner = false;
 
@@ -34,7 +36,6 @@ export default function VenueCard({
     mediaUrl = venue.media[0].url;
   }
 
-  // Assuming bookings are of type BookingType[], map them to ExpandedBookingType[]
   const expandedBookings: ExpandedBookingType[] =
     venue.bookings?.map((booking) => ({
       ...booking,
@@ -83,7 +84,7 @@ export default function VenueCard({
           </div>
         </div>
       </Link>
-      {isOwner ? (
+      {isOwner && !isHomepage ? (
         <div>
           {expandedBookings.length > 0 ? (
             <BookingList

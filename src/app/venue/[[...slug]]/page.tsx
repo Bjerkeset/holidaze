@@ -48,7 +48,6 @@ export default async function VenuePage({
     if (profileError) {
       return <ErrorToast error={profileError} />;
     }
-    console.log("profile", profile);
     if (username.value === venue?.owner?.name) {
       isOwner = true;
     }

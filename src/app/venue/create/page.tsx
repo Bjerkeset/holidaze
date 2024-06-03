@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils/utils";
 import { cookies } from "next/headers";
 import Link from "next/link";
 
-export default async function CreateVenuepage() {
+export default async function CreateVenuePage() {
   const username = cookies().get("username");
   let res = null;
   if (username?.value) {
@@ -24,7 +24,7 @@ export default async function CreateVenuepage() {
       );
     } else
       return (
-        <div className="flex flex-col items-center pt-[10vh] px-4 ">
+        <div className="flex flex-col items-center pt-[10vh] px-4 w-full">
           <CreateVenueForm />
         </div>
       );

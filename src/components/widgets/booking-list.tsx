@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/drawer";
 import { useMediaQuery } from "@/lib/utils/hooks";
 import { Button } from "../ui/button";
+import { usePathname } from "next/navigation";
 
 type Props = {
   bookings: ExpandedBookingType[];

@@ -7,15 +7,12 @@ export default function FavoriteButton({}: Props) {
   const id = "1";
   const isFavorite = false;
   const addFavorite = () => {
-    console.log("Add to favorites");
     cookies().set({
       name: "favorite",
       value: id,
     });
   };
-  const removeFavorite = () => {
-    console.log("Remove from favorites");
-  };
+  const removeFavorite = () => {};
   return (
     <>
       {isFavorite ? (

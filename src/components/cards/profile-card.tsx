@@ -24,8 +24,6 @@ type Props = {
 };
 
 export default function ProfileCard({ user, isMini, isOwner }: Props) {
-  // console.log("user", user);
-  console.log("Is Owner----", isOwner);
   if (isMini) {
     return (
       <Card className={cn(" w-full border-none ")}>

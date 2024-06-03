@@ -62,7 +62,6 @@ export default function CheckoutFormWrapper({ venue, isLoggedIn }: Props) {
   const isLargeScreen = useMediaQuery("(min-width: 678px)");
 
   const handleSubmit = async (values: CheckoutFormType) => {
-    console.log(values);
     setIsLoading(true);
     try {
       const res = await createBooking({
@@ -78,7 +77,6 @@ export default function CheckoutFormWrapper({ venue, isLoggedIn }: Props) {
         setIsLoading(false);
         return;
       }
-      console.log("res", res);
       toast.success("Booking submitted successfully");
     } catch (error: any) {
       console.error(error.message || "An error occurred");

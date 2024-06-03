@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Calendar } from "../ui/calendar";
 import CountInput from "../ui/count-input";
-import { addDays, format } from "date-fns";
+import { addDays } from "date-fns";
 import { VenueType } from "@/lib/validation/types";
 import { DateRange } from "react-day-picker";
 import { Loader2 } from "lucide-react";
@@ -48,6 +47,24 @@ export default function CheckoutForm({
     },
   });
 
+  // Extract booked dates
+  const bookedDates = venue.bookings!.flatMap((booking) => {
+    const startDate = new Date(booking.dateFrom);
+    const endDate = new Date(booking.dateTo);
+    const dates = [];
+    for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+      dates.push(new Date(d));
+    }
+    return dates;
+  });
+
+  // Function to check if a date is booked
+  const isDateBooked = (date: any) => {
+    return bookedDates.some(
+      (bookedDate) => bookedDate.toDateString() === date.toDateString()
+    );
+  };
+
   return (
     <Form {...form}>
       <form
@@ -72,6 +89,7 @@ export default function CheckoutForm({
                     selected={field.value}
                     onSelect={field.onChange}
                     numberOfMonths={1}
+                    disabled={isDateBooked}
                   />
                 </FormControl>
                 <FormDescription className="px-2">
@@ -99,7 +117,7 @@ export default function CheckoutForm({
             </FormItem>
           )}
         />
-        <div className="flex justify-evenly w-full md:w-fit md:flex-col ml-auto gap-2 md:pr-4 text-sm text-muted-foreground">
+        <div className="flex justify-evenly w-full md:w-fit md:flex-col ml-auto gap-2 md:pr-4 text-sm text-muted-foreground py-6">
           <p className="">Tax • 10%</p>
           <p className="">Amount • {form.watch("guests")}</p>
           <p className="md:border-t text-foreground">

@@ -7,11 +7,14 @@ import { DayPicker } from "react-day-picker";
 import { cn } from "@/lib/utils/utils";
 import { buttonVariants } from "@/components/ui/button";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
+  isBookingIndicator?: boolean;
+};
 
 function Calendar({
   className,
   classNames,
+  isBookingIndicator,
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
@@ -53,7 +56,10 @@ function Calendar({
         day_today: "bg-accent text-accent-foreground",
         day_outside:
           "day-outside text-muted-foreground opacity-50  aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50",
+        day_disabled: cn(
+          "text-destructive-foreground bg-destructive/80",
+          isBookingIndicator && "bg-green-400"
+        ),
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         day_hidden: "invisible",

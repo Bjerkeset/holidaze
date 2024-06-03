@@ -34,7 +34,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils/utils";
 import LocationInput from "../widgets/location-input";
-import { useMediaQuery } from "@/lib/utils/hooks"; // Import the useMediaQuery hook
+import { useMediaQuery } from "@/lib/utils/hooks";
 
 export default function CreateVenueForm({
   isEditing = false,
@@ -46,7 +46,7 @@ export default function CreateVenueForm({
   const [formStep, setFormStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const isLargeScreen = useMediaQuery("(min-width: 850px)"); // Use the useMediaQuery hook
+  const isLargeScreen = useMediaQuery("(min-width: 850px)");
   const router = useRouter();
 
   const defaultValues =
@@ -71,7 +71,7 @@ export default function CreateVenueForm({
             },
           ],
           price: 0,
-          maxGuests: 1,
+          maxGuests: 0,
           rating: 0,
           meta: {
             wifi: false,
@@ -101,7 +101,6 @@ export default function CreateVenueForm({
   });
 
   async function onSubmit(data: CreateVenueType) {
-    console.log("Submitted data", data);
     setIsLoading(true);
     try {
       const res =
@@ -111,12 +110,11 @@ export default function CreateVenueForm({
       if (res.error) {
         console.error("An error occurred:", res.error);
         setHasError(true);
-        setTimeout(() => setHasError(false), 1000); // Reset error state after 2 seconds
+        setTimeout(() => setHasError(false), 1000);
         res.error.errors.forEach((err: any) => toast.error(err.message));
         return;
       }
       toast.success(`Venue ${isEditing ? "updated" : "created"} successfully!`);
-      console.log(`Venue ${isEditing ? "updated" : "created"}:`, res.data);
 
       router.replace(`/venue/${res.data?.id}`);
     } catch (error: any) {
@@ -152,7 +150,7 @@ export default function CreateVenueForm({
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-3 relative overflow-x-hidden p-2"
+            className="space-y-3 relative overflow-x-hidden p-2 w-full"
           >
             {isLargeScreen ? (
               <div className=" flex gap-4">
@@ -170,6 +168,7 @@ export default function CreateVenueForm({
                     formTitle={"Description"}
                     description={"Enter the venue description here."}
                     inputType="text"
+                    className="h-56"
                     isTextarea
                   />
                   <CustomFormField
@@ -220,7 +219,10 @@ export default function CreateVenueForm({
                             render={({ field }) => (
                               <FormItem className="w-full">
                                 <FormLabel
-                                  className={cn(index !== 0 && "sr-only")}
+                                  className={cn(
+                                    "text-nowrap",
+                                    index !== 0 && "sr-only "
+                                  )}
                                 >
                                   Media URL
                                 </FormLabel>
@@ -235,7 +237,7 @@ export default function CreateVenueForm({
                           {fields.length > 1 && (
                             <Button
                               type="button"
-                              variant="outline"
+                              variant="ghost"
                               size="icon"
                               onClick={() => remove(index)}
                               className="h-7 w-7"
@@ -248,13 +250,13 @@ export default function CreateVenueForm({
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         className="mt-2 absolute space-x-1"
                         onClick={() => append({ url: "", alt: "" })}
                       >
                         <CirclePlus className="h-4 w-4" />
-                        <span>Add URL</span>
+                        <span className="">Add URL</span>
                       </Button>
                     </div>
                   </div>
@@ -374,6 +376,7 @@ export default function CreateVenueForm({
                     formTitle={"Description"}
                     description={"Enter the venue description here."}
                     inputType="text"
+                    className="h-56"
                     isTextarea
                   />
                   <CustomFormField
@@ -405,7 +408,7 @@ export default function CreateVenueForm({
                     ease: "easeInOut",
                   }}
                 >
-                  <div className="flex justify-between gap-1 pb-10">
+                  <div className="flex justify-between gap-1 pb-10 flex-col ">
                     <div className="w-full">
                       {fields.map((field, index) => (
                         <FormField
@@ -428,16 +431,19 @@ export default function CreateVenueForm({
                         />
                       ))}
                     </div>
-                    <div className="w-1/2">
+                    <div className="">
                       {fields.map((field, index) => (
-                        <div key={field.id} className="flex items-end gap-2">
+                        <div key={field.id} className="flex items-end gap-2 ">
                           <FormField
                             control={form.control}
                             name={`media.${index}.url`}
                             render={({ field }) => (
                               <FormItem className="w-full">
                                 <FormLabel
-                                  className={cn(index !== 0 && "sr-only")}
+                                  className={cn(
+                                    "text-nowrap",
+                                    index !== 0 && "sr-only text-nowrap"
+                                  )}
                                 >
                                   Media URL
                                 </FormLabel>
@@ -452,7 +458,7 @@ export default function CreateVenueForm({
                           {fields.length > 1 && (
                             <Button
                               type="button"
-                              variant="outline"
+                              variant="ghost"
                               size="icon"
                               onClick={() => remove(index)}
                               className="h-7 w-7"
@@ -465,13 +471,13 @@ export default function CreateVenueForm({
 
                       <Button
                         type="button"
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         className="mt-2 absolute space-x-1"
                         onClick={() => append({ url: "", alt: "" })}
                       >
                         <CirclePlus className="h-4 w-4" />
-                        <span>Add URL</span>
+                        <span className="text-xs ">Add URL</span>
                       </Button>
                     </div>
                   </div>

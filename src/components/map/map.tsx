@@ -5,7 +5,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import mapStyle from "./mapStyle.json";
 import { VenueType } from "@/lib/validation/types";
 import MarkerDropdown from "./marker";
-import { createRoot } from "react-dom/client"; // Import createRoot
+import { createRoot } from "react-dom/client";
 import { useSearchParams } from "next/navigation";
 import VenueCard from "../cards/venue-card-sm";
 
@@ -18,23 +18,10 @@ export default function Map({ address, data }: MapProps) {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder | null>(null);
-  const [noAddressFound, setNoAddressFound] = useState(false); // State for "No address found" message
+  const [noAddressFound, setNoAddressFound] = useState(false);
 
   const searchParams = useSearchParams();
   const searchValue = searchParams.get("search");
-
-  // Function to convert SVG to Data URL
-  const svgToDataURL = (svg: string) => {
-    return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
-  };
-
-  // Function to render the lucide-react icon as an SVG string
-  const renderIconToString = () => {
-    const svgString = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>`;
-    return svgToDataURL(svgString);
-  };
-
-  const customIconUrl = renderIconToString();
 
   useEffect(() => {
     const loader = new Loader({
@@ -47,21 +34,25 @@ export default function Map({ address, data }: MapProps) {
       const mapInstance = new google.maps.Map(mapRef.current!, {
         center: defaultLocation,
         zoom: 8,
-        styles: mapStyle as google.maps.MapTypeStyle[], // Apply the custom style
-        mapTypeControl: false, // Disable map/satellite toggle
-        zoomControl: false, // Disable zoom control
-        streetViewControl: false, // Disable street view control
-        // fullscreenControl: false, // Disable fullscreen control
+        styles: mapStyle as google.maps.MapTypeStyle[],
+        mapTypeControl: false,
+        zoomControl: false,
+        streetViewControl: false,
+        keyboardShortcuts: false,
       });
       setMap(mapInstance);
       setGeocoder(new google.maps.Geocoder());
 
-      // If no address is provided, still center at Oslo with a marker
+      const defaultIcon = {
+        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+        scaledSize: new google.maps.Size(25, 25),
+      };
+
       if (!address) {
         new google.maps.Marker({
           map: mapInstance,
           position: defaultLocation,
-          icon: customIconUrl, // Use custom icon
+          icon: defaultIcon,
         });
       }
 
@@ -71,12 +62,12 @@ export default function Map({ address, data }: MapProps) {
           map: mapInstance,
           position: { lat: venue.location.lat!, lng: venue.location.lng! },
           title: venue.name,
-          icon: customIconUrl,
+          icon: defaultIcon,
         });
 
         // Create an InfoWindow with the dropdown menu
         const infoWindow = new google.maps.InfoWindow({
-          content: document.createElement("div"), // Create a container div
+          content: document.createElement("div"),
         });
 
         marker.addListener("click", () => {
@@ -113,12 +104,11 @@ export default function Map({ address, data }: MapProps) {
     const content = infoWindow.getContent() as HTMLElement;
     content.id = `marker-${venue.id}`;
 
-    const root = createRoot(content); // Use createRoot
+    const root = createRoot(content);
     root.render(
       <div
         style={{
           width: "250px",
-          // height: "300px",
         }}
       >
         <VenueCard venue={venue} xs />
@@ -135,7 +125,10 @@ export default function Map({ address, data }: MapProps) {
           new google.maps.Marker({
             map,
             position: results[0].geometry.location,
-            icon: customIconUrl,
+            icon: {
+              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+              scaledSize: new google.maps.Size(25, 25),
+            },
           });
           setNoAddressFound(false);
         } else {

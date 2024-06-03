@@ -75,13 +75,25 @@ export const OwnerSchema = z.object({
   banner: MediaSchema,
 });
 
-// CreateVenue schema
 export const CreateVenueSchema = z.object({
-  name: z.string(),
-  description: z.string(),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters long" })
+    .max(25, { message: "Name must be no more than 25 characters long" }),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters long" })
+    .max(400, {
+      message: "Description must be no more than 400 characters long",
+    }),
   media: z.array(MediaSchema).optional(),
-  price: z.coerce.number(),
-  maxGuests: z.coerce.number().min(1),
+  price: z.coerce
+    .number()
+    .min(1, { message: "Price must be at least 1" })
+    .max(1000000, { message: "Price must be no more than 1000000" }),
+  maxGuests: z.coerce
+    .number()
+    .min(1, { message: "Max guests must be at least 1" }),
   rating: z.number().optional().default(0),
   meta: VenueMetaSchema.optional(),
   location: LocationSchema.optional(),

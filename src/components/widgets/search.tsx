@@ -47,11 +47,9 @@ export default function CommandSearch({
   };
 
   const handleSelect = (value: string) => {
-    console.log("Selected command:", value);
     const decodedValue = decodeURIComponent(value);
     setInputValue(decodedValue);
     setOpen(false);
-    console.log("pathname", pathname);
 
     const query = new URLSearchParams();
     if (decodedValue) {
@@ -81,7 +79,7 @@ export default function CommandSearch({
       <div ref={commandRef} className="relative w-full ">
         <Command className={cn("rounded-lg border shadow-md w-full space-y-1")}>
           <CommandInput
-            placeholder="Search by address..."
+            placeholder="Search in Europe..."
             value={inputValue}
             onValueChange={handleValueChange}
             onKeyDown={handleKeyDown}

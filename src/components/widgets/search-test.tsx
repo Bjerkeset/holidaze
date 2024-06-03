@@ -72,7 +72,7 @@ export function FancyMultiSelect() {
             });
           }
         }
-        // This is not a default behaviour of the <input /> field
+
         if (e.key === "Escape") {
           input.blur();
         }
@@ -84,8 +84,6 @@ export function FancyMultiSelect() {
   const selectables = FRAMEWORKS.filter(
     (framework) => !selected.includes(framework)
   );
-
-  console.log(selectables, selected, inputValue);
 
   return (
     <Command

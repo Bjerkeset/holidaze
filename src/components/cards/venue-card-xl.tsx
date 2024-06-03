@@ -18,6 +18,8 @@ import Map from "../map/map";
 import CheckoutFormWrapper from "../forms/checkout-form-wrapper";
 import BookingList from "../widgets/booking-list";
 import DeleteButton from "../buttons/delete-button";
+import { Calendar } from "../ui/calendar";
+import BookingCalendar from "../widgets/booking-calendar";
 
 type Props = {
   venue: VenueType;
@@ -73,7 +75,7 @@ export default function VenueCardXl({ venue, isOwner, isLoggedIn }: Props) {
     }));
   const bookings = processBookings(venue);
   return (
-    <div className="flex flex-col items-center justify-between h-full">
+    <div className="flex flex-col items-center justify-between h-full  overflow-hidden">
       <div className=" flex flex-col w-full md:w-4/5">
         <CardCarousel media={venue.media} />
         <div className="p-4 space-y-10 pb-24">
@@ -87,8 +89,6 @@ export default function VenueCardXl({ venue, isOwner, isLoggedIn }: Props) {
             </div>
             <p>
               <span>{venue.location.address} </span>
-              {/* <span>{venue.location.city}, </span> */}
-              {/* <span>{venue.location.country}</span> */}
             </p>
           </div>
           <div className="h-auto flex flex-col gap-6">
@@ -152,11 +152,12 @@ export default function VenueCardXl({ venue, isOwner, isLoggedIn }: Props) {
             <div>
               {isOwner && (
                 <div className="">
-                  <h2 className="text-semibold">Bookings</h2>
+                  <h2 className="font-semibold text-lg">Bookings</h2>
                   <p className="text-muted-foreground">
                     You have {bookings.length} active booking
                     {bookings.length !== 1 && `s`}
                   </p>
+                  <BookingCalendar bookings={bookings} />
                   <BookingList
                     isVenuePage
                     isOwner={isOwner}
@@ -173,7 +174,7 @@ export default function VenueCardXl({ venue, isOwner, isLoggedIn }: Props) {
           <CheckoutFormWrapper venue={venue} isLoggedIn={isLoggedIn} />
         )}
         {isOwner && (
-          <div className="hidden md:flex w-full items-center border-t p-2  gap-2 bg-background">
+          <div className="hidden md:flex w-full items-center border-t p-2  gap-2 bg-background ">
             <DeleteButton id={venue.id} />
             <Link
               className={cn(

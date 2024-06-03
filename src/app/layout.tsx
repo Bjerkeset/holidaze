@@ -6,12 +6,22 @@ import "../styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils/utils";
 
-// const inter = Inter({ subsets: ["latin"] });
 const inter = Raleway({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Holidaze - Your holiday booking site",
   description: "Book your holiday with Holidaze",
+  keywords: ["Booking", "Travel", "Accomodation", "Exam"],
+  authors: [
+    {
+      name: "bjerkeset",
+    },
+  ],
+  creator: "B. Bjerkeset",
+
+  icons: {
+    icon: "/logo-sized-original.png",
+  },
 };
 
 export default function RootLayout({
@@ -21,7 +31,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "w-screen h-screen bg-background")}>
+      <body
+        className={cn(
+          inter.className,
+          "min-w-screen min-h-screen bg-background pb-[200px]"
+        )}
+      >
         {children}
         <Toaster />
       </body>
